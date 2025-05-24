@@ -4,10 +4,10 @@ import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { AuthGuard } from './auth/guards/auth.guard';
 
 export const routes: Routes = [
-  { path: '', redirectTo: 'login', pathMatch: 'full' },  // <-- Esta linha garante o redirecionamento inicial
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
   {
-    path: 'dash',
+    path: 'dashboard',
     component: DashboardComponent,
     canActivate: [AuthGuard]
   }
