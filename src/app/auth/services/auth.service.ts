@@ -1,64 +1,62 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, tap } from 'rxjs';
-
-function storageAvailable(type: 'localStorage' | 'sessionStorage') {
-  try {
-    const storage = window[type];
-    const x = '__storage_test__';
-    storage.setItem(x, x);
-    storage.removeItem(x);
-    return true;
-  } catch (e) {
-    return false;
-  }
-}
+import { Router } from '@angular/router';
+import { BehaviorSubject, tap } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private api = 'http://localhost:8080/auth/login'; // ajuste para sua API
+  private jwtSubject = new BehaviorSubject<string | null>(this.getToken());
+  jwt$ = this.jwtSubject.asObservable();
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private router: Router) {}
 
-  login(credentials: { username: string; password: string }): Observable<{ token: string }> {
-    return this.http.post<{ token: string }>(this.api, credentials).pipe(
+  login(credentials: { username: string; password: string }) {
+    return this.http.post<{ token: string }>(
+      'http://localhost:8080/auth/login',
+      credentials
+    ).pipe(
       tap(res => {
-        if (storageAvailable('localStorage')) {
-          try {
-            localStorage.setItem('token', res.token);
-          } catch (e) {
-            console.error('Erro ao gravar token no localStorage', e);
-          }
-        } else {
-          console.error('localStorage não está disponível!');
-        }
+        this.setToken(res.token);
+        this.jwtSubject.next(res.token);
       })
     );
   }
 
-  getToken() {
-    if (storageAvailable('localStorage')) {
-      try {
-        return localStorage.getItem('token');
-      } catch (e) {
-        console.error('Erro ao ler token do localStorage', e);
-        return null;
-      }
-    }
-    return null;
+  logout() {
+    this.removeToken();
+    this.jwtSubject.next(null);
+    this.router.navigate(['/login']);
   }
 
-  isAuthenticated() {
+  // Protege acesso ao localStorage com try/catch
+  private setToken(token: string) {
+    try { localStorage.setItem('jwt', token); } catch {}
+  }
+  private getToken(): string | null {
+    try { return localStorage.getItem('jwt'); } catch { return null; }
+  }
+  private removeToken() {
+    try { localStorage.removeItem('jwt'); } catch {}
+  }
+
+  get token() {
+    return this.getToken();
+  }
+
+  isAuthenticated(): boolean {
     return !!this.getToken();
   }
 
-  logout() {
-    if (storageAvailable('localStorage')) {
-      try {
-        localStorage.removeItem('token');
-      } catch (e) {
-        console.error('Erro ao remover token do localStorage', e);
-      }
+  // Método para verificar se possui pelo menos uma das roles
+  hasAnyRole(roles: string[]): boolean {
+    const token = this.token;
+    if (!token) return false;
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      const userRoles: string[] = payload.roles || payload.authorities || [];
+      return roles.some(role => userRoles.includes(role));
+    } catch {
+      return false;
     }
   }
 }
