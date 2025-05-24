@@ -1,59 +1,90 @@
-# CrmSecurityFront
+# 🚀 CRM - Sistema de Gestão de Relacionamento com Clientes
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.13.
+## Descrição do Projeto
 
-## Development server
+Sistema CRM desenvolvido para otimizar processos de captação, gestão e acompanhamento de clientes, leads e documentos. Uma plataforma robusta, segura e escalável, pensada para empresas que buscam produtividade e controle.
 
-To start a local development server, run:
+---
 
-```bash
-ng serve
-```
+## ✅ Funcionalidades
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+- 🔹 Gestão de clientes e leads.
+- 🔹 Histórico de ações e movimentações.
+- 🔹 Upload e armazenamento seguro de documentos.
+- 🔹 Gestão de usuários, permissões e perfis.
+- 🔹 Controle de acesso seguro (Spring Security + JWT).
+- 🔹 API documentada com Swagger.
+- 🔹 Frontend responsivo e moderno (Angular 19+).
+- 🔹 Integração entre backend e frontend 100% funcional.
 
-## Code scaffolding
+---
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## 🏗️ Tecnologias Utilizadas
 
-```bash
-ng generate component component-name
-```
+### Backend
+- Java 17+
+- Spring Boot
+- Spring Security (JWT)
+- PostgreSQL
+- Swagger
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+### Frontend
+- Angular 19+
+- Angular Standalone Components
+- Angular Material
 
-```bash
-ng generate --help
-```
+### Mobile (em desenvolvimento)
+- Flutter ou React Native (em análise)
 
-## Building
+### DevOps e Infraestrutura
+- Docker e Docker Compose
+- Jenkins
+- GitLab CI/CD
+- SonarQube
 
-To build the project run:
+---
 
-```bash
-ng build
-```
+## 🛡️ Segurança
+- Autenticação via JWT.
+- Controle refinado de permissões por roles.
+- Proteção de endpoints sensíveis.
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+---
 
-## Running unit tests
+## 🚀 Roadmap
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+- ✅ Gestão de leads e clientes.
+- ✅ Upload e gestão de documentos.
+- ✅ Controle de usuários e permissões.
+- ✅ Histórico de movimentações.
+- 🔄 Dashboard com indicadores e gráficos.
+- 🔄 Automação de tarefas e processos.
+- 🔄 Integrações externas (WhatsApp, e-mail, DeepSeek).
+- 🔄 Deploy em ambiente de nuvem.
+- 🔄 **Aplicativo mobile para Android e iOS.**
 
-```bash
-ng test
-```
+---
 
-## Running end-to-end tests
+## 🏆 Diferenciais
 
-For end-to-end (e2e) testing, run:
+- Simples, prático e escalável.
+- Pensado para aumentar produtividade e controle.
+- Segurança robusta e arquitetura moderna.
+- Solução multiplataforma: Web e Mobile.
 
-```bash
-ng e2e
-```
+---
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+## 🤝 Contato
 
-## Additional Resources
+Se você tem interesse em testar, colaborar ou adquirir a solução, entre em contato:
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+- 💼 [LinkedIn - Danilo Pelusci](https://www.linkedin.com/in/danilo-pelusci/)
+- 📧 Email: **[Seu email aqui]**
+
+---
+
+## 📄 Licença
+
+Projeto licenciado sob a [MIT License](LICENSE).
+
+---
