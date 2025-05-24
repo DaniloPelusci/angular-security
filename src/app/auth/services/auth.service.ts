@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, tap } from 'rxjs';
+import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -9,20 +9,20 @@ export class AuthService {
   constructor(private http: HttpClient) {}
 
   login(credentials: { username: string; password: string }): Observable<{ token: string }> {
-    return this.http.post<{ token: string }>(this.api, credentials).pipe(
-      tap(res => localStorage.setItem('token', res.token))
-    );
+    return this.http.post<{ token: string }>(this.api, credentials);
   }
 
   getToken() {
-    return localStorage.getItem('token');
+    // Simula ausência de autenticação
+    return null;
   }
 
   isAuthenticated() {
-    return !!this.getToken();
+    // Sempre retorna false (não autenticado)
+    return false;
   }
 
   logout() {
-    localStorage.removeItem('token');
+    // Não faz nada
   }
 }
