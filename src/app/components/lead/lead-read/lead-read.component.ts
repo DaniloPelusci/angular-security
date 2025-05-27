@@ -4,33 +4,58 @@ import { MatPaginatorModule, MatPaginator } from '@angular/material/paginator';
 import { MatSortModule, MatSort } from '@angular/material/sort';
 import { Lead } from '../../../models/lead.model';
 import { LeadService } from '../lead.service';
+import {MatIconModule} from '@angular/material/icon';
+import {LeadCreateComponent} from '../lead-create/lead-create.component';
 
 @Component({
   selector: 'app-lead-read',
   templateUrl: './lead-read.component.html',
-  styleUrl: './lead-read.component.css',
-  imports: [MatTableModule, MatPaginatorModule, MatSortModule]
+  styleUrls: ['./lead-read.component.css'],
+  standalone: true,
+  imports: [
+    MatTableModule,
+    MatPaginatorModule,
+    MatSortModule,
+    LeadCreateComponent,
+    MatTableModule, MatPaginatorModule, MatSortModule, MatIconModule]
 })
 export class LeadReadComponent implements AfterViewInit {
   leads: Lead[] = [];
-  constructor(private leadServe: LeadService) {}
+  selectedLead?: Lead;
+
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatTable) table!: MatTable<Lead>;
   dataSource = new MatTableDataSource<Lead>();
 
-  /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
-  displayedColumns = ['id', 'nome','corretor', 'origem', 'status'];
+  displayedColumns = ['id', 'nome', 'corretor', 'origem', 'status', 'editar'];
+
+  constructor(private leadService: LeadService) {}
 
   ngAfterViewInit(): void {
-    console.log('pokemon');
-    this.leadServe.read().subscribe(leads => {
+    this.loadLeads();
+  }
+
+  loadLeads() {
+    this.leadService.read().subscribe(leads => {
       this.leads = leads;
-      this.table.dataSource = this.leads;
+      this.dataSource.data = leads;
+      // Se for paginado/sorted, adicione abaixo
+      this.dataSource.sort = this.sort;
+      this.dataSource.paginator = this.paginator;
     });
-    this.dataSource.sort = this.sort;
-    this.dataSource.paginator = this.paginator;
-
-  }
   }
 
+  onEditLead(lead: Lead) {
+    this.selectedLead = { ...lead };
+  }
+
+  onSaved() {
+    this.selectedLead = undefined;
+    this.loadLeads();
+  }
+
+  onNewLead() {
+    this.selectedLead = undefined; // Limpa o form para novo
+  }
+}

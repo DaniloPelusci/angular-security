@@ -1,0 +1,11 @@
+<form [formGroup]="leadForm" (ngSubmit)="onSubmit()">
+  <input formControlName="nome" placeholder="Nome" required>
+  <input formControlName="cpfCnpj" placeholder="CPF/CNPJ">
+  <input formControlName="telefone" placeholder="Telefone">
+  <input formControlName="origem" placeholder="Origem">
+  <input formControlName="statusLeads" placeholder="Status">
+  <textarea formControlName="observacao" placeholder="Observação"></textarea>
+
+  <button type="submit">{{ leadForm.get('id')?.value ? 'Atualizar' : 'Salvar' }}</button>
+  <button type="button" (click)="clearForm()">Limpar</button>
+</form>

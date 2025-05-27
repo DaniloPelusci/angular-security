@@ -1,30 +1,38 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
 import { LeadService } from '../lead.service';
-import { Lead } from '../../../models/lead.model';
+import { Lead} from '../../../models/lead.model';
+import {CommonModule} from '@angular/common';
 
 @Component({
-  standalone: true,
   selector: 'app-lead-list',
-  imports: [CommonModule, HttpClientModule],
   templateUrl: './lead-list.component.html',
-  styleUrls: ['./lead-list.component.css']
+  imports: [CommonModule],
+  standalone: true
 })
 export class LeadListComponent implements OnInit {
   leads: Lead[] = [];
+  selectedLead?: Lead;
 
-  constructor(private leadServe: LeadService) {}
+  constructor(private leadService: LeadService) {}
 
-  ngOnInit(): void {
-    this.leadServe.read().subscribe({
-      next: (leads) => {
-        this.leads = leads;
-        console.log(leads);
-      },
-      error: (err) => {
-        console.error('Erro ao buscar leads:', err);
-      }
+  ngOnInit() {
+    this.loadLeads();
+  }
+
+  loadLeads() {
+    this.leadService.read().subscribe({
+      next: (leads) => this.leads = leads,
+      error: (err) => console.error('Erro ao buscar leads:', err)
     });
   }
+
+  onEditLead(lead: Lead) {
+    this.selectedLead = { ...lead };
+  }
+
+  onSaved() {
+    this.selectedLead = undefined;
+    this.loadLeads();
+  }
+  
 }

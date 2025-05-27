@@ -29,12 +29,16 @@ export class LeadService {
     })
 
   }
-  create(lead: Lead): Observable<Lead>{
-    // @ts-ignore
-    return this.http.post(this.baseUrl, lead)
-  }
+
   read(): Observable<Lead[]> {
     return this.http.get<Lead[]>(this.apiUrl);
+  }
+  create(lead: Lead): Observable<Lead> {
+    return this.http.post<Lead>(this.apiUrl, lead);
+  }
+
+  update(lead: Lead): Observable<Lead> {
+    return this.http.put<Lead>(`${this.apiUrl}/${lead.id}`, lead);
   }
 
 }
