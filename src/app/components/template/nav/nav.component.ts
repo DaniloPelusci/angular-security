@@ -4,13 +4,14 @@ import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { RouterOutlet, RouterLink } from '@angular/router';
-import { CommonModule } from '@angular/common'; // <-- Adicione isso!
-import { AuthService } from '../../../auth/services/auth.service'; 
+import { CommonModule } from '@angular/common';
+import { AuthService } from '../../../auth/services/auth.service';
+
 @Component({
   selector: 'app-nav',
   standalone: true,
   imports: [
-    CommonModule, // <-- Adicione aqui!
+    CommonModule,
     RouterOutlet,
     RouterLink,
     MatSidenavModule,
@@ -22,7 +23,20 @@ import { AuthService } from '../../../auth/services/auth.service';
   styleUrl: './nav.component.css'
 })
 export class NavComponent {
+
+
   constructor(public authService: AuthService) {}
+
+  canShow(roles: string[]): boolean {
+    return this.authService.hasAnyRole(roles);
+  }
+
+  menuItems = [
+    { label: 'Início', icon: 'home', route: '/dashboard', roles: ['ADMIN', 'USER', 'CORRETOR'] },
+    { label: 'Lista Leads', icon: 'list', route: '/leads', roles: ['ADMIN', 'GESTOR', 'CORRETOR'] },
+    { label: 'read', icon: 'list', route: '/read', roles: ['ADMIN'] },
+    { label: 'Criar lead', icon: 'note_add', route: '/leads/create', roles: ['ADMIN', 'CORRETOR'] }
+  ];
 
   logout() {
     this.authService.logout();

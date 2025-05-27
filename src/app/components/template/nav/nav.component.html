@@ -1,29 +1,23 @@
 <mat-sidenav-container class="conteiner">
-    <mat-sidenav class="sidenav" mode="side" opened fixedInViewport="true" fixedTopGap="64">
-        <mat-nav-list class="nav-list">
-            <a routerLink="/dashboard" mat-list-item>
-                <mat-icon>home</mat-icon>
-                Início
-            </a>
-            <a routerLink="/leads" mat-list-item >
-                <mat-icon>list</mat-icon>
-                Lista Leads
-            </a>
-            <a routerLink="/read" mat-list-item >
-                <mat-icon>list</mat-icon>
-                read
-            </a>
-            <a routerLink="/leads/create" mat-list-item>
-                <mat-icon>note_add</mat-icon>
-                Criar lead
-            </a>
-            <a *ngIf="authService.isAuthenticated()" (click)="logout()" routerLink="/leads/create" mat-list-item>
-                <mat-icon>note_add</mat-icon>
-                Sair
-            </a>
-        </mat-nav-list>
-    </mat-sidenav>
-    <mat-sidenav-content class="content">
-        <router-outlet></router-outlet>
-    </mat-sidenav-content>
+  <mat-sidenav class="sidenav" mode="side" opened fixedInViewport="true" fixedTopGap="64">
+    <mat-nav-list class="nav-list">
+      <!-- Menu dinâmico conforme as roles -->
+      <ng-container *ngFor="let item of menuItems">
+        <a *ngIf="canShow(item.roles)"
+           [routerLink]="item.route"
+           mat-list-item>
+          <mat-icon>{{ item.icon }}</mat-icon>
+          {{ item.label }}
+        </a>
+      </ng-container>
+      <!-- Botão de sair -->
+      <a *ngIf="authService.isAuthenticated()" (click)="logout()" mat-list-item>
+        <mat-icon>logout</mat-icon>
+        Sair
+      </a>
+    </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content class="content">
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
 </mat-sidenav-container>

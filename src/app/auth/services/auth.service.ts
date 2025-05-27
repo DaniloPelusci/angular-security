@@ -59,4 +59,17 @@ export class AuthService {
       return false;
     }
   }
+
+  getRoles(): string[] {
+    const token = localStorage.getItem('jwt'); // <-- troque de 'token' para 'jwt'
+    if (!token) return [];
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      return payload.roles || [];
+    } catch {
+      return [];
+    }
+  }
+
+
 }
