@@ -1,26 +1,30 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpClientModule,HttpClient } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 import { LeadService } from '../lead.service';
 import { Lead } from '../../../models/lead.model';
 
 @Component({
-  standalone: true, 
+  standalone: true,
   selector: 'app-lead-list',
-  imports: [CommonModule, HttpClientModule], 
+  imports: [CommonModule, HttpClientModule],
   templateUrl: './lead-list.component.html',
   styleUrls: ['./lead-list.component.css']
 })
-export class LeadListComponent {
+export class LeadListComponent implements OnInit {
   leads: Lead[] = [];
 
   constructor(private leadServe: LeadService) {}
 
   ngOnInit(): void {
-    console.log('pokemon');
-    this.leadServe.read().subscribe(leads => {
-      this.leads = leads;
-      console.log(leads);
+    this.leadServe.read().subscribe({
+      next: (leads) => {
+        this.leads = leads;
+        console.log(leads);
+      },
+      error: (err) => {
+        console.error('Erro ao buscar leads:', err);
+      }
     });
   }
 }

@@ -1,6 +1,13 @@
 export interface Usuario {
-    id?: number;
-    nome?: string;
-    email?: string;
-    telefone?: string;
-  }
+  id?: number;
+  username?: string;
+  password?: string;
+  nome?: string;
+  telefone?: string;
+  email?: string;
+  accountNonExpired?: boolean;
+  accountNonLocked?: boolean;
+  credentialsNonExpired?: boolean;
+  enabled?: boolean;
+  authorities?: { authority: string }[];
+}

@@ -18,7 +18,7 @@ import { Observable } from 'rxjs';
 export class LeadService {
 
   baseUrl = "http://localhost:8080/leads";
-
+  private apiUrl = "http://localhost:8080/api/leads";
   constructor(private snackBar: MatSnackBar, private http: HttpClient) { }
 
   showOnConsole(msg: string): void{
@@ -27,13 +27,14 @@ export class LeadService {
       horizontalPosition: "right",
       verticalPosition: "top"
     })
-    
+
   }
   create(lead: Lead): Observable<Lead>{
+    // @ts-ignore
     return this.http.post(this.baseUrl, lead)
   }
-  read(): Observable<Lead[]>{
-    return this.http.get<Lead[]>(this.baseUrl)
+  read(): Observable<Lead[]> {
+    return this.http.get<Lead[]>(this.apiUrl);
   }
-  
+
 }

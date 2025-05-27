@@ -33,8 +33,7 @@ export class NavComponent {
 
   menuItems = [
     { label: 'Início', icon: 'home', route: '/dashboard', roles: ['ADMIN', 'USER', 'CORRETOR'] },
-    { label: 'Lista Leads', icon: 'list', route: '/leads', roles: ['ADMIN', 'GESTOR', 'CORRETOR'] },
-    { label: 'read', icon: 'list', route: '/read', roles: ['ADMIN'] },
+    { label: 'Lista', icon: 'list', route: '/read', roles: ['ADMIN'] },
     { label: 'Criar lead', icon: 'note_add', route: '/leads/create', roles: ['ADMIN', 'CORRETOR'] }
   ];
 

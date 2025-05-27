@@ -16,12 +16,6 @@ export const routes: Routes = [
     data: { roles: ['ADMIN'] }
   },
   {
-    path: "leads",
-    component: LeadListComponent,
-    canActivate: [AuthGuard],
-    data: { roles: ['ADMIN'] }
-  },
-  {
     path: "leads/create",
     component: LeadCreateComponent,
     canActivate: [AuthGuard],

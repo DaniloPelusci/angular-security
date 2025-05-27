@@ -2,7 +2,6 @@ import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { MatTableModule, MatTable, MatTableDataSource } from '@angular/material/table';
 import { MatPaginatorModule, MatPaginator } from '@angular/material/paginator';
 import { MatSortModule, MatSort } from '@angular/material/sort';
-import { LeadReadDataSource, LeadReadItem } from './lead-read-datasource';
 import { Lead } from '../../../models/lead.model';
 import { LeadService } from '../lead.service';
 
@@ -31,7 +30,7 @@ export class LeadReadComponent implements AfterViewInit {
     });
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
-    
+
   }
   }
 

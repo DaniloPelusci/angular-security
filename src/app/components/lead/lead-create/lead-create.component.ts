@@ -14,13 +14,13 @@ import { Router } from '@angular/router';
 
 
 @Component({
-  standalone: true, 
+  standalone: true,
   selector: 'app-lead-create',
   imports: [
     HttpClientModule ,
     FlexLayoutModule,
     MatCardModule,
-    FormsModule, 
+    FormsModule,
     MatFormFieldModule,
     MatInputModule,
     MatIconModule
@@ -31,18 +31,10 @@ import { Router } from '@angular/router';
 export class LeadCreateComponent {
 
   constructor(private leadService: LeadService, private router: Router){}
-  lead: Lead = {
 
-  
-  
-  };
   ngOnInit(): void {
-    
+
   }
-  createLead(){
-    this.leadService.create(this.lead).subscribe(()=> 
-      {this.leadService.showOnConsole('Lead Criado') })
-    this.router.navigate(['leads'])
-  }
+
 
 }
