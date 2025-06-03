@@ -1,11 +1,38 @@
-<form [formGroup]="leadForm" (ngSubmit)="onSubmit()">
-  <input formControlName="nome" placeholder="Nome" required>
-  <input formControlName="cpfCnpj" placeholder="CPF/CNPJ">
-  <input formControlName="telefone" placeholder="Telefone">
-  <input formControlName="origem" placeholder="Origem">
-  <input formControlName="statusLeads" placeholder="Status">
-  <textarea formControlName="observacao" placeholder="Observação"></textarea>
-
-  <button type="submit">{{ leadForm.get('id')?.value ? 'Atualizar' : 'Salvar' }}</button>
-  <button type="button" (click)="clearForm()">Limpar</button>
-</form>
+<mat-card class="lead-form-card">
+  <form [formGroup]="leadForm" (ngSubmit)="onSubmit()" class="lead-form">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Nome</mat-label>
+      <input matInput formControlName="nome" required>
+    </mat-form-field>
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>CPF/CNPJ</mat-label>
+      <input matInput formControlName="cpfCnpj">
+    </mat-form-field>
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Telefone</mat-label>
+      <input matInput formControlName="telefone">
+    </mat-form-field>
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Origem</mat-label>
+      <input matInput formControlName="origem">
+    </mat-form-field>
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Status</mat-label>
+      <input matInput formControlName="statusLeads">
+    </mat-form-field>
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Observação</mat-label>
+      <textarea matInput formControlName="observacao" rows="3"></textarea>
+    </mat-form-field>
+    <div class="button-group">
+      <button mat-raised-button color="primary" type="submit">
+        <mat-icon>save</mat-icon>
+        {{ leadForm.get('id')?.value ? 'Atualizar' : 'Salvar' }}
+      </button>
+      <button mat-stroked-button color="warn" type="button" (click)="clearForm()">
+        <mat-icon>clear</mat-icon>
+        Limpar
+      </button>
+    </div>
+  </form>
+</mat-card>

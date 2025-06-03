@@ -7,6 +7,8 @@ import { LeadService } from '../lead.service';
 import {MatIconModule} from '@angular/material/icon';
 import {LeadCreateComponent} from '../lead-create/lead-create.component';
 
+
+
 @Component({
   selector: 'app-lead-read',
   templateUrl: './lead-read.component.html',
