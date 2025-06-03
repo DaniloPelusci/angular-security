@@ -8,7 +8,7 @@ import {
   MatSnackBarRef,
 } from '@angular/material/snack-bar';
 import { LeadCreateComponent } from './lead-create/lead-create.component';
-import { HttpClient } from '@angular/common/http';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 import { Lead } from '../../models/lead.model';
 import { Observable } from 'rxjs';
 
@@ -31,8 +31,11 @@ export class LeadService {
   }
 
   read(): Observable<Lead[]> {
-    return this.http.get<Lead[]>(this.apiUrl);
+    const jwt = localStorage.getItem("jwt");
+    const headers = new HttpHeaders().set("Authorization", "Bearer " + jwt);
+    return this.http.get<Lead[]>(this.apiUrl, { headers });
   }
+
   create(lead: Lead): Observable<Lead> {
     return this.http.post<Lead>(this.apiUrl, lead);
   }
