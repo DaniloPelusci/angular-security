@@ -32,9 +32,9 @@ export class NavComponent {
   }
 
   menuItems = [
-    { label: 'Início', icon: 'home', route: '/dashboard', roles: ['ADMIN', 'USER', 'CORRETOR'] },
-    { label: 'Lista', icon: 'list', route: '/read', roles: ['ADMIN'] },
-    { label: 'Criar lead', icon: 'note_add', route: '/leads/create', roles: ['ADMIN', 'CORRETOR'] }
+    { label: 'Início', icon: 'home', route: '/dashboard', roles: ['ROLE_ADMIN', 'ROLE_USER', 'ROLE_CORRETOR'] },
+    { label: 'Lista', icon: 'list', route: '/read', roles: ['ROLE_ADMIN'] },
+    { label: 'Criar lead', icon: 'note_add', route: '/leads/create', roles: ['ROLE_ADMIN', 'ROLE_CORRETOR'] }
   ];
 
   logout() {
