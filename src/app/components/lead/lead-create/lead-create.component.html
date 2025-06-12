@@ -1,29 +1,51 @@
 <mat-card class="lead-form-card">
   <form [formGroup]="leadForm" (ngSubmit)="onSubmit()" class="lead-form">
+    <!-- Nome -->
     <mat-form-field appearance="outline" class="full-width">
       <mat-label>Nome</mat-label>
       <input matInput formControlName="nome" required>
     </mat-form-field>
+    <!-- Email -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Email</mat-label>
+      <input matInput formControlName="email" type="email">
+    </mat-form-field>
+    <!-- CPF/CNPJ -->
     <mat-form-field appearance="outline" class="full-width">
       <mat-label>CPF/CNPJ</mat-label>
       <input matInput formControlName="cpfCnpj">
     </mat-form-field>
+    <!-- Telefone -->
     <mat-form-field appearance="outline" class="full-width">
       <mat-label>Telefone</mat-label>
       <input matInput formControlName="telefone">
     </mat-form-field>
+    <!-- Origem -->
     <mat-form-field appearance="outline" class="full-width">
       <mat-label>Origem</mat-label>
       <input matInput formControlName="origem">
     </mat-form-field>
+    <!-- Status -->
     <mat-form-field appearance="outline" class="full-width">
       <mat-label>Status</mat-label>
-      <input matInput formControlName="statusLeads">
+      <mat-select formControlName="statusLeads">
+        <mat-option *ngFor="let status of statusOptions" [value]="status">{{ status }}</mat-option>
+      </mat-select>
     </mat-form-field>
+    <!-- Observação -->
     <mat-form-field appearance="outline" class="full-width">
       <mat-label>Observação</mat-label>
       <textarea matInput formControlName="observacao" rows="3"></textarea>
     </mat-form-field>
+    <mat-form-field *ngIf="isAdmin" appearance="outline" class="full-width">
+      <mat-label>Corretor</mat-label>
+      <mat-select formControlName="corretorId">
+        <mat-option *ngFor="let corretor of corretores" [value]="corretor.id">
+          {{ corretor.nome }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
     <div class="button-group">
       <button mat-raised-button color="primary" type="submit">
         <mat-icon>save</mat-icon>

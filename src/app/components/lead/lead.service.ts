@@ -41,5 +41,8 @@ export class LeadService {
   update(lead: Lead): Observable<Lead> {
     return this.http.put<Lead>(`${this.apiUrl}/${lead.id}`, lead);
   }
+  listCorretores(): Observable<{ id: number, nome: string }[]> {
+    return this.http.get<{ id: number, nome: string }[]>('http://localhost:8080/api/users/corretores');
+  }
 
 }
