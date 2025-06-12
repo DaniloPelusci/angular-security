@@ -31,9 +31,7 @@ export class LeadService {
   }
 
   read(): Observable<Lead[]> {
-    const jwt = localStorage.getItem("jwt");
-    const headers = new HttpHeaders().set("Authorization", "Bearer " + jwt);
-    return this.http.get<Lead[]>(this.apiUrl, { headers });
+    return this.http.get<Lead[]>(this.apiUrl);
   }
 
   create(lead: Lead): Observable<Lead> {

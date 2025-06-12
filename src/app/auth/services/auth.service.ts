@@ -32,7 +32,7 @@ export class AuthService {
   private setToken(token: string) {
     try { localStorage.setItem('jwt', token); } catch {}
   }
-  private getToken(): string | null {
+  getToken(): string | null {
     try { return localStorage.getItem('jwt'); } catch { return null; }
   }
   private removeToken() {
