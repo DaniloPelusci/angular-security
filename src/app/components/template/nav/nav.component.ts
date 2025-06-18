@@ -34,7 +34,7 @@ export class NavComponent {
   menuItems = [
     { label: 'Início', icon: 'home', route: '/dashboard', roles: ['ROLE_ADMIN', 'ROLE_USER', 'ROLE_CORRETOR'] },
     { label: 'Lista', icon: 'list', route: '/read', roles: ['ROLE_ADMIN'] },
-    { label: 'Lista Leads Aptos', icon: 'list', route: '/leads/listCorrespondente', roles: ['ROLE_ADMIN', 'ROLE_CORRESPONDENTE'] },
+    { label: 'Lista Leads Aptos', icon: 'list', route: '/listCorrespondente', roles: ['ROLE_ADMIN', 'ROLE_CORRESPONDENTE'] },
     { label: 'Criar lead', icon: 'note_add', route: '/leads/create', roles: ['ROLE_ADMIN', 'ROLE_CORRETOR'] }
   ];
 
