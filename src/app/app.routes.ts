@@ -5,6 +5,9 @@ import { AuthGuard } from './auth/guards/auth.guard';
 import { LeadListComponent } from './components/lead/lead-list/lead-list.component';
 import { LeadCreateComponent } from './components/lead/lead-create/lead-create.component';
 import { LeadReadComponent } from './components/lead/lead-read/lead-read.component';
+import {
+  LeadReadCorrespondenteComponent
+} from './components/lead/lead-list-correspondente/lead-read-correspondente.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -26,5 +29,11 @@ export const routes: Routes = [
     component: LeadReadComponent,
     canActivate: [AuthGuard],
     data: { roles: ['ROLE_ADMIN'] }
+  },
+  {
+    path: 'listCorrespondente',
+    component: LeadReadCorrespondenteComponent,
+    canActivate: [AuthGuard],
+    data: { roles: ['ROLE_ADMIN', "ROLE_CORRESPONDENTE"] }
   }
 ];

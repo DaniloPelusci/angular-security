@@ -19,6 +19,7 @@ export class LeadService {
 
   baseUrl = "http://localhost:8080/leads";
   private apiUrl = "http://localhost:8080/api/leads";
+  private apiCorresp = "http://localhost:8080/api/correspondente/leads/completos";
   constructor(private snackBar: MatSnackBar, private http: HttpClient) { }
 
   showOnConsole(msg: string): void{
@@ -32,6 +33,9 @@ export class LeadService {
 
   read(): Observable<Lead[]> {
     return this.http.get<Lead[]>(this.apiUrl);
+  }
+  listCorrespondent(): Observable<Lead[]> {
+    return this.http.get<Lead[]>(this.apiCorresp);
   }
 
   create(lead: Lead): Observable<Lead> {
