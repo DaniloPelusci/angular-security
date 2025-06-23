@@ -16,19 +16,19 @@ export const routes: Routes = [
     path: 'dashboard',
     component: DashboardComponent,
     canActivate: [AuthGuard],
-    data: { roles: ['ROLE_ADMIN'] }
+    data: { roles: ['ROLE_ADMIN', 'ROLE_CORRETOR'] }
   },
   {
     path: "leads/create",
     component: LeadCreateComponent,
     canActivate: [AuthGuard],
-    data: { roles: ['ROLE_ADMIN'] }
+    data: { roles: ['ROLE_ADMIN', 'ROLE_CORRETOR'] }
   },
   {
     path: "read",
     component: LeadReadComponent,
     canActivate: [AuthGuard],
-    data: { roles: ['ROLE_ADMIN'] }
+    data: { roles: ['ROLE_ADMIN', 'ROLE_CORRETOR'] }
   },
   {
     path: 'listCorrespondente',

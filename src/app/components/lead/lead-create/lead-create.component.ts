@@ -35,7 +35,13 @@ export class LeadCreateComponent implements OnChanges {
   @Input() leadToEdit?: Lead;
   @Output() saved = new EventEmitter<void>();
   leadForm: FormGroup;
-  statusOptions = ['Novo', 'Em andamento', 'Finalizado', 'Cancelado'];
+  statusOptions = [
+    { value: 'NOVO', label: 'Novo' },
+    { value: 'EM_ATENDIMENTO', label: 'Em andamento' },
+    { value: 'FINALIZADO', label: 'Finalizado' },
+    { value: 'CANCELADO', label: 'Cancelado' }
+  ];
+
 
   // NOVO: Flag de admin e lista de corretores
   isAdmin = false;
@@ -73,11 +79,16 @@ export class LeadCreateComponent implements OnChanges {
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['leadToEdit'] && this.leadToEdit) {
-      this.leadForm.patchValue(this.leadToEdit);
+      this.leadForm.patchValue({
+        ...this.leadToEdit,
+        corretorId: this.leadToEdit.corretor?.id ?? null, // pega o id do corretor corretamente
+        statusLeads: this.leadToEdit.statusLeads ?? ''    // garante que status vai preencher o select
+      });
     } else {
       this.leadForm.reset();
     }
   }
+
 
   onSubmit() {
     const lead: Lead = this.leadForm.value;

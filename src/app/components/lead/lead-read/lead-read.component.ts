@@ -30,7 +30,7 @@ export class LeadReadComponent implements AfterViewInit {
   @ViewChild(MatTable) table!: MatTable<Lead>;
   dataSource = new MatTableDataSource<Lead>();
 
-  displayedColumns = ['id', 'nome', 'corretor', 'origem', 'status', 'editar'];
+  displayedColumns = ['id', 'nome', 'corretor', 'origem', 'status', 'editar','documentos'];
 
   constructor(private leadService: LeadService) {}
 
@@ -42,7 +42,7 @@ export class LeadReadComponent implements AfterViewInit {
     this.leadService.read().subscribe(leads => {
       this.leads = leads;
       this.dataSource.data = leads;
-      // Se for paginado/sorted, adicione abaixo
+
       this.dataSource.sort = this.sort;
       this.dataSource.paginator = this.paginator;
     });
