@@ -49,4 +49,8 @@ export class LeadService {
     return this.http.get<{ id: number, nome: string }[]>('http://localhost:8080/api/users/corretores');
   }
 
+  uploadDocumentos(formData: FormData) {
+    return this.http.post('http://localhost:8080/api/leads/upload-documentos', formData);
+  }
+
 }

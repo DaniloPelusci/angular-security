@@ -35,5 +35,11 @@ export const routes: Routes = [
     component: LeadReadCorrespondenteComponent,
     canActivate: [AuthGuard],
     data: { roles: ['ROLE_ADMIN', "ROLE_CORRESPONDENTE"] }
+  },
+  {
+    path: 'list',
+    component: LeadListComponent,
+    canActivate: [AuthGuard],
+    data: { roles: ['ROLE_ADMIN', "ROLE_CORRESPONDENTE"] }
   }
 ];

@@ -30,7 +30,7 @@ export class LeadReadComponent implements AfterViewInit {
   @ViewChild(MatTable) table!: MatTable<Lead>;
   dataSource = new MatTableDataSource<Lead>();
 
-  displayedColumns = ['id', 'nome', 'corretor', 'origem', 'status', 'editar','documentos'];
+  displayedColumns = ['id', 'nome', 'corretor', 'origem', 'status', 'editar'];
 
   constructor(private leadService: LeadService) {}
 

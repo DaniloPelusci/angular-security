@@ -61,3 +61,17 @@
     </div>
   </form>
 </mat-card>
+
+<mat-card class="lead-form-card">
+<input type="file" multiple (change)="onFileChange($event)" />
+<ul *ngIf="arquivosSelecionados.length > 0">
+  <li *ngFor="let file of arquivosSelecionados">{{ file.name }}</li>
+</ul>
+  <!-- Botão para enviar arquivos (exemplo) -->
+  <button mat-raised-button color="primary"
+          (click)="enviarArquivos()"
+          [disabled]="arquivosSelecionados.length === 0 || !leadForm.get('id')?.value">
+    Enviar Arquivos
+  </button>
+
+</mat-card>

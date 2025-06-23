@@ -10,8 +10,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
-import {AuthService} from '../../../auth/services/auth.service';
+import { MatSnackBarModule, MatSnackBar } from '@angular/material/snack-bar';
+import { AuthService } from '../../../auth/services/auth.service';
 
 @Component({
   selector: 'app-lead-create',
@@ -41,16 +41,16 @@ export class LeadCreateComponent implements OnChanges {
     { value: 'FINALIZADO', label: 'Finalizado' },
     { value: 'CANCELADO', label: 'Cancelado' }
   ];
-
-
-  // NOVO: Flag de admin e lista de corretores
   isAdmin = false;
   corretores: { id: number, nome: string }[] = [];
+
+  arquivosSelecionados: File[] = []; // Novo: array para arquivos
 
   constructor(
     private fb: FormBuilder,
     private leadService: LeadService,
-    private authService: AuthService // Injete seu AuthService aqui!
+    private authService: AuthService,
+    private snackBar: MatSnackBar // Agora injeta o snackBar!
   ) {
     this.leadForm = this.fb.group({
       id: [null],
@@ -61,12 +61,11 @@ export class LeadCreateComponent implements OnChanges {
       origem: [''],
       statusLeads: [''],
       observacao: [''],
-      corretorId: [null] // Usado somente se admin
+      corretorId: [null]
     });
 
-    this.isAdmin = this.authService.hasRole('ROLE_ADMIN'); // precisa desse método no AuthService
+    this.isAdmin = this.authService.hasRole('ROLE_ADMIN');
 
-    // Carrega lista de corretores se for admin
     if (this.isAdmin) {
       this.loadCorretores();
     }
@@ -81,30 +80,59 @@ export class LeadCreateComponent implements OnChanges {
     if (changes['leadToEdit'] && this.leadToEdit) {
       this.leadForm.patchValue({
         ...this.leadToEdit,
-        corretorId: this.leadToEdit.corretor?.id ?? null, // pega o id do corretor corretamente
-        statusLeads: this.leadToEdit.statusLeads ?? ''    // garante que status vai preencher o select
+        corretorId: this.leadToEdit.corretor?.id ?? null,
+        statusLeads: this.leadToEdit.statusLeads ?? ''
       });
     } else {
       this.leadForm.reset();
     }
   }
 
+  onFileChange(event: Event) {
+    const target = event.target as HTMLInputElement;
+    if (target.files) {
+      this.arquivosSelecionados = Array.from(target.files);
+    }
+  }
+
+  // Chame esse método após o lead já existir no banco!
+  enviarArquivos() {
+    const leadId = this.leadForm.get('id')?.value;
+    if (!leadId || this.arquivosSelecionados.length === 0) return;
+
+    const formData = new FormData();
+    this.arquivosSelecionados.forEach(file => {
+      formData.append('arquivos', file);
+    });
+    formData.append('leadId', leadId.toString());
+
+    this.leadService.uploadDocumentos(formData).subscribe({
+      next: () => {
+        this.arquivosSelecionados = [];
+        this.snackBar.open('Arquivos enviados com sucesso!', '', { duration: 3000 });
+      },
+      error: () => {
+        this.snackBar.open('Falha ao enviar arquivos.', '', { duration: 3000 });
+      }
+    });
+  }
 
   onSubmit() {
     const lead: Lead = this.leadForm.value;
-    // Garante que só envia corretorId se for admin
-    if (!this.isAdmin) {
-
-    }
     if (lead.id) {
       this.leadService.update(lead).subscribe(() => this.saved.emit());
     } else {
-      this.leadService.create(lead).subscribe(() => this.saved.emit());
+      this.leadService.create(lead).subscribe(novoLead => {
+        this.leadForm.patchValue({ id: novoLead.id }); // Atualiza o form para liberar upload
+        this.saved.emit();
+      });
     }
-    this.leadForm.reset();
+    // Não limpe o form imediatamente após criar, para não perder o ID!
+    // this.leadForm.reset();
   }
 
   clearForm() {
     this.leadForm.reset();
+    this.arquivosSelecionados = [];
   }
 }
