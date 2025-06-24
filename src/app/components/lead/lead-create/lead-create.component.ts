@@ -2,6 +2,7 @@ import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { LeadService } from '../lead.service';
 import { Lead } from '../../../models/lead.model';
+
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
@@ -12,6 +13,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
 import { MatSnackBarModule, MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from '../../../auth/services/auth.service';
+import {DocumentoLead} from '../../../models/documentoLead.model';
 
 @Component({
   selector: 'app-lead-create',
@@ -43,14 +45,14 @@ export class LeadCreateComponent implements OnChanges {
   ];
   isAdmin = false;
   corretores: { id: number, nome: string }[] = [];
-
-  arquivosSelecionados: File[] = []; // Novo: array para arquivos
+  arquivosSelecionados: File[] = [];
+  documentos: DocumentoLead[] = [];
 
   constructor(
     private fb: FormBuilder,
     private leadService: LeadService,
     private authService: AuthService,
-    private snackBar: MatSnackBar // Agora injeta o snackBar!
+    private snackBar: MatSnackBar
   ) {
     this.leadForm = this.fb.group({
       id: [null],
@@ -65,7 +67,6 @@ export class LeadCreateComponent implements OnChanges {
     });
 
     this.isAdmin = this.authService.hasRole('ROLE_ADMIN');
-
     if (this.isAdmin) {
       this.loadCorretores();
     }
@@ -83,8 +84,17 @@ export class LeadCreateComponent implements OnChanges {
         corretorId: this.leadToEdit.corretor?.id ?? null,
         statusLeads: this.leadToEdit.statusLeads ?? ''
       });
+      // Carregar documentos do lead selecionado
+      if (this.leadToEdit.id) {
+        this.leadService.getDocumentosDoLead(this.leadToEdit.id)
+          .subscribe(docs => this.documentos = docs);
+      } else {
+        this.documentos = [];
+      }
     } else {
       this.leadForm.reset();
+      this.arquivosSelecionados = [];
+      this.documentos = [];
     }
   }
 
@@ -95,7 +105,6 @@ export class LeadCreateComponent implements OnChanges {
     }
   }
 
-  // Chame esse método após o lead já existir no banco!
   enviarArquivos() {
     const leadId = this.leadForm.get('id')?.value;
     if (!leadId || this.arquivosSelecionados.length === 0) return;
@@ -110,10 +119,26 @@ export class LeadCreateComponent implements OnChanges {
       next: () => {
         this.arquivosSelecionados = [];
         this.snackBar.open('Arquivos enviados com sucesso!', '', { duration: 3000 });
+        // Recarrega lista de documentos após upload
+        this.leadService.getDocumentosDoLead(leadId)
+          .subscribe(docs => this.documentos = docs);
       },
       error: () => {
         this.snackBar.open('Falha ao enviar arquivos.', '', { duration: 3000 });
       }
+    });
+  }
+
+  baixarDocumento(id: number, nomeArquivo: string) {
+    this.leadService.downloadDocumento(id).subscribe(blob => {
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = nomeArquivo;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
     });
   }
 
@@ -123,16 +148,16 @@ export class LeadCreateComponent implements OnChanges {
       this.leadService.update(lead).subscribe(() => this.saved.emit());
     } else {
       this.leadService.create(lead).subscribe(novoLead => {
-        this.leadForm.patchValue({ id: novoLead.id }); // Atualiza o form para liberar upload
+        this.leadForm.patchValue({ id: novoLead.id });
         this.saved.emit();
       });
     }
     // Não limpe o form imediatamente após criar, para não perder o ID!
-    // this.leadForm.reset();
   }
 
   clearForm() {
     this.leadForm.reset();
     this.arquivosSelecionados = [];
+    this.documentos = [];
   }
 }

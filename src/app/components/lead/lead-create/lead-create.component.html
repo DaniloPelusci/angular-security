@@ -5,33 +5,36 @@
       <mat-label>Nome</mat-label>
       <input matInput formControlName="nome" required>
     </mat-form-field>
+
     <!-- Email -->
     <mat-form-field appearance="outline" class="full-width">
       <mat-label>Email</mat-label>
       <input matInput formControlName="email" type="email">
     </mat-form-field>
+
     <!-- CPF/CNPJ -->
     <mat-form-field appearance="outline" class="full-width">
       <mat-label>CPF/CNPJ</mat-label>
       <input matInput formControlName="cpfCnpj">
     </mat-form-field>
+
     <!-- Telefone -->
     <mat-form-field appearance="outline" class="full-width">
       <mat-label>Telefone</mat-label>
       <input matInput formControlName="telefone">
     </mat-form-field>
+
     <!-- Origem -->
     <mat-form-field appearance="outline" class="full-width">
       <mat-label>Origem</mat-label>
       <input matInput formControlName="origem">
     </mat-form-field>
+
     <!-- Status -->
     <mat-form-field appearance="outline" class="full-width">
       <mat-label>Status</mat-label>
       <mat-select formControlName="statusLeads">
-        <mat-option *ngFor="let status of statusOptions" [value]="status.value">
-          {{ status.label }}
-        </mat-option>
+        <mat-option *ngFor="let status of statusOptions" [value]="status.value">{{ status.label }}</mat-option>
       </mat-select>
     </mat-form-field>
 
@@ -40,6 +43,8 @@
       <mat-label>Observação</mat-label>
       <textarea matInput formControlName="observacao" rows="3"></textarea>
     </mat-form-field>
+
+    <!-- Seleção de corretor (apenas para admin) -->
     <mat-form-field *ngIf="isAdmin" appearance="outline" class="full-width">
       <mat-label>Corretor</mat-label>
       <mat-select formControlName="corretorId">
@@ -62,16 +67,40 @@
   </form>
 </mat-card>
 
-<mat-card class="lead-form-card">
-<input type="file" multiple (change)="onFileChange($event)" />
-<ul *ngIf="arquivosSelecionados.length > 0">
-  <li *ngFor="let file of arquivosSelecionados">{{ file.name }}</li>
-</ul>
-  <!-- Botão para enviar arquivos (exemplo) -->
+<!-- Upload de Arquivos -->
+<mat-card class="mt-3 lead-form-card" >
+  <h3>Enviar documentos</h3>
+  <input type="file" multiple (change)="onFileChange($event)" />
+  <ul *ngIf="arquivosSelecionados.length > 0">
+    <li *ngFor="let file of arquivosSelecionados">{{ file.name }}</li>
+  </ul>
   <button mat-raised-button color="primary"
           (click)="enviarArquivos()"
           [disabled]="arquivosSelecionados.length === 0 || !leadForm.get('id')?.value">
+    <mat-icon>upload</mat-icon>
     Enviar Arquivos
   </button>
+</mat-card>
 
+<!-- Lista de Documentos do Lead -->
+<mat-card style="margin-bottom: 12px" class="mt-3" *ngIf="documentos.length > 0">
+  <h3>Documentos deste Lead</h3>
+  <table class="mat-elevation-z1 full-width-table">
+    <tr>
+      <th>Nome</th>
+      <th>Tipo</th>
+      <th>Data de Emissão</th>
+      <th>Ações</th>
+    </tr>
+    <tr *ngFor="let doc of documentos">
+      <td>{{ doc.nomeArquivo }}</td>
+      <td>{{ doc.tipoDocumento }}</td>
+      <td>{{ doc.dataEmissao | date:'shortDate' }}</td>
+      <td>
+        <button mat-icon-button color="primary" (click)="baixarDocumento(doc.id, doc.nomeArquivo)">
+          <mat-icon>download</mat-icon>
+        </button>
+      </td>
+    </tr>
+  </table>
 </mat-card>

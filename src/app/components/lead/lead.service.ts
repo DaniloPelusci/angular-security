@@ -11,6 +11,7 @@ import { LeadCreateComponent } from './lead-create/lead-create.component';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import { Lead } from '../../models/lead.model';
 import { Observable } from 'rxjs';
+import {DocumentoLead} from '../../models/documentoLead.model';
 
 @Injectable({
   providedIn: 'root'
@@ -52,5 +53,13 @@ export class LeadService {
   uploadDocumentos(formData: FormData) {
     return this.http.post('http://localhost:8080/api/leads/upload-documentos', formData);
   }
+  getDocumentosDoLead(leadId: number) {
+    return this.http.get<DocumentoLead[]>(`http://localhost:8080/api/documentos-lead/lead/${leadId}`);
+  }
+
+  downloadDocumento(id: number) {
+    return this.http.get(`http://localhost:8080/api/documentos-lead/${id}/download`, { responseType: 'blob' });
+  }
+
 
 }
