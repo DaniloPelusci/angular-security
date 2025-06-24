@@ -82,9 +82,10 @@
       </mat-form-field>
     </div>
   </div>
-  <button style="margin-bottom: 12px" mat-raised-button color="primary"
+  <button mat-raised-button color="primary"
           (click)="enviarArquivos()"
-          [disabled]="isUploadDisabled()">
+          [disabled]="isUploadDisabled()"
+          style="margin-top: 12px; width: 100%;">
     <mat-icon>upload</mat-icon>
     Enviar Arquivos
   </button>
