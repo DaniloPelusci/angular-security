@@ -68,22 +68,29 @@
 </mat-card>
 
 <!-- Upload de Arquivos -->
-<mat-card class="mt-3 lead-form-card" >
+<mat-card style="margin-bottom: 12px" class="mt-3 " >
   <h3>Enviar documentos</h3>
   <input type="file" multiple (change)="onFileChange($event)" />
-  <ul *ngIf="arquivosSelecionados.length > 0">
-    <li *ngFor="let file of arquivosSelecionados">{{ file.name }}</li>
-  </ul>
-  <button mat-raised-button color="primary"
+  <div *ngIf="arquivosParaUpload.length > 0">
+    <div *ngFor="let arq of arquivosParaUpload; let i = index" style="margin-bottom: 8px;">
+      <span>{{ arq.file.name }}</span>
+      <mat-form-field appearance="outline" style="width: 220px; margin-left: 16px;">
+        <mat-label>Tipo do documento</mat-label>
+        <mat-select [(ngModel)]="arquivosParaUpload[i].tipoDocumentoId" name="tipoDoc{{i}}">
+          <mat-option *ngFor="let tipo of tiposDocumento" [value]="tipo.value">{{ tipo.label }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </div>
+  <button style="margin-bottom: 12px" mat-raised-button color="primary"
           (click)="enviarArquivos()"
-          [disabled]="arquivosSelecionados.length === 0 || !leadForm.get('id')?.value">
+          [disabled]="isUploadDisabled()">
     <mat-icon>upload</mat-icon>
     Enviar Arquivos
   </button>
-</mat-card>
 
 <!-- Lista de Documentos do Lead -->
-<mat-card style="margin-bottom: 12px" class="mt-3" *ngIf="documentos.length > 0">
+<mat-card  class="mt-3" *ngIf="documentos.length > 0">
   <h3>Documentos deste Lead</h3>
   <table class="mat-elevation-z1 full-width-table">
     <tr>
@@ -92,13 +99,17 @@
       <th>Data de Emissão</th>
       <th>Ações</th>
     </tr>
-    <tr *ngFor="let doc of documentos">
+    <tr *ngFor="let doc of documentos"
+        [ngClass]="{'data-vencida': isDataVencida(doc.dataEmissao)}">
       <td>{{ doc.nomeArquivo }}</td>
-      <td>{{ doc.tipoDocumento }}</td>
+      <td>{{ doc.tipoDocumento.descricao }}</td>
       <td>{{ doc.dataEmissao | date:'shortDate' }}</td>
       <td>
         <button mat-icon-button color="primary" (click)="baixarDocumento(doc.id, doc.nomeArquivo)">
           <mat-icon>download</mat-icon>
+        </button>
+        <button mat-icon-button color="warn" (click)="deletarDocumento(doc.id)">
+          <mat-icon>delete</mat-icon>
         </button>
       </td>
     </tr>

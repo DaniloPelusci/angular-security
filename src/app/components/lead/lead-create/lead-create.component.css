@@ -21,3 +21,7 @@
   gap: 12px;
   justify-content: flex-end;
 }
+.data-vencida {
+  background-color: #ffe5e5 !important; /* Vermelho clarinho */
+}
+

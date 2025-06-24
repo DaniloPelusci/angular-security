@@ -51,7 +51,7 @@ export class LeadService {
   }
 
   uploadDocumentos(formData: FormData) {
-    return this.http.post('http://localhost:8080/api/leads/upload-documentos', formData);
+    return this.http.post('http://localhost:8080/api/documentos-lead/upload', formData)
   }
   getDocumentosDoLead(leadId: number) {
     return this.http.get<DocumentoLead[]>(`http://localhost:8080/api/documentos-lead/lead/${leadId}`);
@@ -59,6 +59,10 @@ export class LeadService {
 
   downloadDocumento(id: number) {
     return this.http.get(`http://localhost:8080/api/documentos-lead/${id}/download`, { responseType: 'blob' });
+  }
+
+  deletarDocumento(documentoId: number) {
+    return this.http.delete(`http://localhost:8080/api/documentos-lead/${documentoId}`);
   }
 
 
