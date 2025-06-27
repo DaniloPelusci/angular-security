@@ -1,0 +1,38 @@
+<mat-form-field appearance="outline" class="full-width">
+  <mat-label>Buscar lead por nome ou CPF/CNPJ...</mat-label>
+  <input matInput [formControl]="buscaCtrl" autocomplete="off">
+</mat-form-field>
+
+<table mat-table [dataSource]="leadsFiltrados" class="mat-elevation-z1 full-width-table" *ngIf="leadsFiltrados.length > 0">
+  <!-- Nome -->
+  <ng-container matColumnDef="nome">
+    <th mat-header-cell *matHeaderCellDef>Nome</th>
+    <td mat-cell *matCellDef="let lead">{{ lead.nome }}</td>
+  </ng-container>
+  <!-- CPF/CNPJ -->
+  <ng-container matColumnDef="cpfCnpj">
+    <th mat-header-cell *matHeaderCellDef>CPF/CNPJ</th>
+    <td mat-cell *matCellDef="let lead">{{ lead.cpfCnpj }}</td>
+  </ng-container>
+  <!-- Telefone -->
+  <ng-container matColumnDef="telefone">
+    <th mat-header-cell *matHeaderCellDef>Telefone</th>
+    <td mat-cell *matCellDef="let lead">{{ lead.telefone }}</td>
+  </ng-container>
+  <!-- Selecionar -->
+  <ng-container matColumnDef="selecionar">
+    <th mat-header-cell *matHeaderCellDef>Selecionar</th>
+    <td mat-cell *matCellDef="let lead">
+      <button mat-icon-button color="primary" (click)="selecionarLead(lead)" matTooltip="Selecionar Lead">
+        <mat-icon>check_circle</mat-icon>
+      </button>
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
+
+<div *ngIf="buscaCtrl.value && leadsFiltrados.length === 0" class="mt-2" style="color:#888;">
+  Nenhum lead encontrado.
+</div>

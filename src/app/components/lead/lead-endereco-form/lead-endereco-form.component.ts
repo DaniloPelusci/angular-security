@@ -1,0 +1,49 @@
+import { Component, Input, Output, EventEmitter, numberAttribute } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { LeadService } from '../lead.service';
+import { Endereco } from '../../../models/endereco.model';
+import { MatIconModule } from '@angular/material/icon';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatCardModule } from '@angular/material/card';
+import { MatInputModule } from '@angular/material/input';
+
+@Component({
+  selector: 'app-lead-endereco-form',
+  templateUrl: './lead-endereco-form.component.html',
+  standalone: true,
+  imports: [
+    ReactiveFormsModule,      // <-- ADICIONE AQUI!
+    MatIconModule,
+    MatCheckboxModule,
+    MatFormFieldModule,
+    MatCardModule,
+    MatInputModule
+  ]
+})
+export class LeadEnderecoFormComponent {
+  @Input({ transform: numberAttribute }) leadId!: number;
+  @Output() enderecoSalvo = new EventEmitter<void>();
+  form: FormGroup;
+
+  constructor(private fb: FormBuilder, private leadService: LeadService) {
+    this.form = this.fb.group({
+      logradouro: [''],
+      numero: [''],
+      complemento: [''],
+      bairro: [''],
+      cidade: [''],
+      estado: [''],
+      cep: [''],
+      principal: [false] // <-- Adicione este campo!
+    });
+  }
+
+  onSubmit() {
+    const endereco: Endereco = this.form.value;
+    this.leadService.adicionarEndereco(this.leadId, endereco).subscribe(() => {
+      this.enderecoSalvo.emit();
+      this.form.reset();
+    });
+  }
+}

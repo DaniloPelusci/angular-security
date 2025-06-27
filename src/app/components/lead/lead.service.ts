@@ -12,6 +12,7 @@ import {HttpClient, HttpHeaders} from '@angular/common/http';
 import { Lead } from '../../models/lead.model';
 import { Observable } from 'rxjs';
 import {DocumentoLead} from '../../models/documentoLead.model';
+import {Endereco} from '../../models/endereco.model';
 
 @Injectable({
   providedIn: 'root'
@@ -63,6 +64,12 @@ export class LeadService {
 
   deletarDocumento(documentoId: number) {
     return this.http.delete(`http://localhost:8080/api/documentos-lead/${documentoId}`);
+  }
+  listarEnderecosDoLead(leadId?: number): Observable<Endereco[]> {
+    return this.http.get<Endereco[]>(`/api/enderecos-lead/lead/${leadId}`);
+  }
+  adicionarEndereco(leadId: number, endereco: Endereco): Observable<Endereco> {
+    return this.http.post<Endereco>(`/api/enderecos-lead/lead/${leadId}`, endereco);
   }
 
 
