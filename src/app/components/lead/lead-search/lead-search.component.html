@@ -30,7 +30,10 @@
   </ng-container>
 
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  <tr mat-row
+      *matRowDef="let row; columns: displayedColumns;"
+      [class.selected]="row.id === selectedLeadId">
+  </tr>
 </table>
 
 <div *ngIf="buscaCtrl.value && leadsFiltrados.length === 0" class="mt-2" style="color:#888;">

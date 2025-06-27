@@ -1,4 +1,8 @@
-<app-lead-search (leadSelecionado)="onLeadSelecionado($event)"></app-lead-search>
+<app-lead-search
+  [selectedLeadId]="leadSelecionado?.id"
+  (leadSelecionado)="onLeadSelecionado($event)">
+</app-lead-search>
+
 
 <ng-container *ngIf="leadSelecionado">
 

@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter } from '@angular/core';
+import {Component, Output, EventEmitter, Input} from '@angular/core';
 import { LeadService } from '../lead.service';
 import { Lead } from '../../../models/lead.model';
 import { CommonModule } from '@angular/common';
@@ -23,8 +23,8 @@ import { MatInputModule } from '@angular/material/input';
   ]
 })
 export class LeadSearchComponent {
+  @Input() selectedLeadId?: number;
   @Output() leadSelecionado = new EventEmitter<Lead>();
-
   buscaCtrl = new FormControl('');
   leadsFiltrados: Lead[] = [];
   allLeads: Lead[] = [];
@@ -49,7 +49,6 @@ export class LeadSearchComponent {
 
   selecionarLead(lead: Lead) {
     this.leadSelecionado.emit(lead);
-    this.buscaCtrl.setValue('');
-    this.leadsFiltrados = [];
+    this.selectedLeadId = lead.id;
   }
 }
