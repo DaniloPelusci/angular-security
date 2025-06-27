@@ -28,6 +28,7 @@ export class LeadEnderecoFormComponent {
 
   constructor(private fb: FormBuilder, private leadService: LeadService) {
     this.form = this.fb.group({
+      id: [''],
       logradouro: [''],
       numero: [''],
       complemento: [''],
@@ -40,10 +41,14 @@ export class LeadEnderecoFormComponent {
   }
 
   onSubmit() {
-    const endereco: Endereco = this.form.value;
+    const endereco: Endereco = {
+      ...this.form.value,
+      lead: { id: this.leadId }   // Envia só o id do lead!
+    };
     this.leadService.adicionarEndereco(this.leadId, endereco).subscribe(() => {
       this.enderecoSalvo.emit();
       this.form.reset();
     });
   }
+
 }

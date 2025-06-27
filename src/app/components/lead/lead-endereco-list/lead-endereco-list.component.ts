@@ -1,15 +1,34 @@
 import {Component, Input, numberAttribute, OnInit} from '@angular/core';
-import {MatTable, MatTableDataSource} from '@angular/material/table';
+import {
+  MatCell,
+  MatCellDef, MatColumnDef, MatHeaderCell,
+  MatHeaderCellDef, MatHeaderRow,
+  MatHeaderRowDef, MatRow,
+  MatRowDef,
+  MatTable,
+  MatTableDataSource
+} from '@angular/material/table';
 import { LeadService } from '../lead.service';
 import { Endereco } from '../../../models/endereco.model';
 import {NgIf} from '@angular/common';
+import {MatIconModule} from '@angular/material/icon';
 
 @Component({
   selector: 'app-lead-endereco-list',
   templateUrl: './lead-endereco-list.component.html',
   imports: [
     MatTable,
-    NgIf
+    NgIf,
+    MatHeaderCellDef,
+    MatCellDef,
+    MatHeaderRowDef,
+    MatRowDef,
+    MatIconModule,
+    MatColumnDef,
+    MatHeaderCell,
+    MatCell,
+    MatHeaderRow,
+    MatRow
   ],
   standalone: true
 })
@@ -20,6 +39,7 @@ export class LeadEnderecoListComponent implements OnInit {
   displayedColumns: string[] = [
     'logradouro', 'numero', 'complemento', 'bairro', 'cidade', 'estado', 'cep', 'principal'
   ];
+
 
   constructor(private leadService: LeadService) {}
 

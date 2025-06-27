@@ -66,10 +66,10 @@ export class LeadService {
     return this.http.delete(`http://localhost:8080/api/documentos-lead/${documentoId}`);
   }
   listarEnderecosDoLead(leadId?: number): Observable<Endereco[]> {
-    return this.http.get<Endereco[]>(`/api/enderecos-lead/lead/${leadId}`);
+    return this.http.get<Endereco[]>(`http://localhost:8080/api/enderecos-lead/lead/${leadId}`);
   }
   adicionarEndereco(leadId: number, endereco: Endereco): Observable<Endereco> {
-    return this.http.post<Endereco>(`/api/enderecos-lead/lead/${leadId}`, endereco);
+    return this.http.post<Endereco>(`http://localhost:8080/api/enderecos-lead`, endereco);
   }
 
 

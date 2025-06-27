@@ -1,50 +1,52 @@
 <h3>Endereços do Lead</h3>
-<table mat-table [dataSource]="dataSource" class="mat-elevation-z1 full-width-table" *ngIf="enderecos.length > 0">
-<!-- Logradouro -->
+<table mat-table [dataSource]="dataSource" class="mat-elevation-z1">
+
   <ng-container matColumnDef="logradouro">
     <th mat-header-cell *matHeaderCellDef>Logradouro</th>
     <td mat-cell *matCellDef="let end">{{ end.logradouro }}</td>
   </ng-container>
-  <!-- Número -->
+
   <ng-container matColumnDef="numero">
     <th mat-header-cell *matHeaderCellDef>Número</th>
     <td mat-cell *matCellDef="let end">{{ end.numero }}</td>
   </ng-container>
-  <!-- Complemento -->
+
   <ng-container matColumnDef="complemento">
     <th mat-header-cell *matHeaderCellDef>Complemento</th>
     <td mat-cell *matCellDef="let end">{{ end.complemento }}</td>
   </ng-container>
-  <!-- Bairro -->
+
   <ng-container matColumnDef="bairro">
     <th mat-header-cell *matHeaderCellDef>Bairro</th>
     <td mat-cell *matCellDef="let end">{{ end.bairro }}</td>
   </ng-container>
-  <!-- Cidade -->
+
   <ng-container matColumnDef="cidade">
     <th mat-header-cell *matHeaderCellDef>Cidade</th>
     <td mat-cell *matCellDef="let end">{{ end.cidade }}</td>
   </ng-container>
-  <!-- Estado -->
+
   <ng-container matColumnDef="estado">
     <th mat-header-cell *matHeaderCellDef>Estado</th>
     <td mat-cell *matCellDef="let end">{{ end.estado }}</td>
   </ng-container>
-  <!-- CEP -->
+
   <ng-container matColumnDef="cep">
     <th mat-header-cell *matHeaderCellDef>CEP</th>
     <td mat-cell *matCellDef="let end">{{ end.cep }}</td>
   </ng-container>
-  <!-- Principal -->
+
   <ng-container matColumnDef="principal">
-    <th mat-header-cell *matHeaderCellDef>Principal</th>
-    <td mat-cell *matCellDef="let end">{{ end.principal ? 'Sim' : 'Não' }}</td>
+    <th mat-header-cell *matHeaderCellDef>Principal?</th>
+    <td mat-cell *matCellDef="let end">
+      <mat-icon *ngIf="end.principal" color="primary">star</mat-icon>
+    </td>
   </ng-container>
 
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
   <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 </table>
 
-<div *ngIf="enderecos.length === 0">
+<div *ngIf="dataSource.data.length === 0" class="mt-2">
   Nenhum endereço cadastrado para este lead.
 </div>
