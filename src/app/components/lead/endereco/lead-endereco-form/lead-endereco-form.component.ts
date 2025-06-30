@@ -1,7 +1,7 @@
 import {Component, Input, Output, EventEmitter, numberAttribute, SimpleChanges} from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { LeadService } from '../lead.service';
-import { Endereco } from '../../../models/endereco.model';
+import { LeadService } from '../../lead.service';
+import { Endereco } from '../../../../models/endereco.model';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';

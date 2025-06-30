@@ -9,8 +9,8 @@ import {
   MatTable,
   MatTableDataSource
 } from '@angular/material/table';
-import { LeadService } from '../lead.service';
-import { Endereco } from '../../../models/endereco.model';
+import { LeadService } from '../../lead.service';
+import { Endereco } from '../../../../models/endereco.model';
 import {NgIf} from '@angular/common';
 import {MatIconModule} from '@angular/material/icon';
 

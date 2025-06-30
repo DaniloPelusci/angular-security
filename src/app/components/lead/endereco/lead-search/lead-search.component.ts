@@ -1,6 +1,6 @@
 import {Component, Output, EventEmitter, Input} from '@angular/core';
-import { LeadService } from '../lead.service';
-import { Lead } from '../../../models/lead.model';
+import { LeadService } from '../../lead.service';
+import { Lead } from '../../../../models/lead.model';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormControl } from '@angular/forms';
 import { MatTableModule } from '@angular/material/table';
