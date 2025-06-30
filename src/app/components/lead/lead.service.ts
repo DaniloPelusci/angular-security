@@ -68,9 +68,19 @@ export class LeadService {
   listarEnderecosDoLead(leadId?: number): Observable<Endereco[]> {
     return this.http.get<Endereco[]>(`http://localhost:8080/api/enderecos-lead/lead/${leadId}`);
   }
-  adicionarEndereco(leadId: number, endereco: Endereco): Observable<Endereco> {
+  adicionarEndereco(endereco: Endereco): Observable<Endereco> {
     return this.http.post<Endereco>(`http://localhost:8080/api/enderecos-lead`, endereco);
   }
+  // Para atualizar (PUT)
+  updateEndereco( endereco: Endereco) {
+    return this.http.put<Endereco>(`http://localhost:8080/api/enderecos-lead`, endereco);
+  }
+
+  // Para excluir (DELETE)
+    deleteEndereco( enderecoId: number) {
+      return this.http.delete(`http://localhost:8080/api/enderecos-lead/${enderecoId}`);
+    }
+
 
 
 }

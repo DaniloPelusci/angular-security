@@ -46,6 +46,10 @@
       <button mat-stroked-button color="warn" type="button" (click)="form.reset()" style="margin-left: 8px;">
         <mat-icon>clear</mat-icon> Limpar
       </button>
+      <button mat-stroked-button color="warn" type="button" (click)="cancelar.emit()">
+        Cancelar
+      </button>
+
     </div>
   </form>
 </mat-card>

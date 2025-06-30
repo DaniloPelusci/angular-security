@@ -11,15 +11,21 @@
     <button mat-raised-button color="primary" (click)="mostrarFormEndereco()">
       <mat-icon>add_location_alt</mat-icon> Adicionar Endereço
     </button>
-    <app-lead-endereco-list [leadId]="leadSelecionado.id"></app-lead-endereco-list>
+    <app-lead-endereco-list
+      [leadId]="leadSelecionado.id"
+      (editarEndereco)="onEditarEndereco($event)">
+    </app-lead-endereco-list>
   </div>
 
   <!-- Mostra form se está adicionando -->
   <div *ngIf="adicionandoEndereco">
     <app-lead-endereco-form
+      *ngIf="enderecoEmEdicao"
       [leadId]="leadSelecionado.id"
+      [endereco]="enderecoEmEdicao"
       (enderecoSalvo)="onEnderecoSalvo()"
-    ></app-lead-endereco-form>
+      (cancelar)="onCancelarEdicao()">
+    </app-lead-endereco-form>
     <button mat-stroked-button color="warn" (click)="adicionandoEndereco = false" style="margin-top:12px;">
       <mat-icon>arrow_back</mat-icon> Voltar para lista
     </button>

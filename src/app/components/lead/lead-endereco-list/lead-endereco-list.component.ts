@@ -1,4 +1,5 @@
 import {Component, Input, numberAttribute, OnInit, SimpleChanges} from '@angular/core';
+import { Output, EventEmitter } from '@angular/core';
 import {
   MatCell,
   MatCellDef, MatColumnDef, MatHeaderCell,
@@ -34,10 +35,11 @@ import {MatIconModule} from '@angular/material/icon';
 })
 export class LeadEnderecoListComponent implements OnInit {
   @Input({transform: numberAttribute}) leadId!: number;
+  @Output() editarEndereco = new EventEmitter<Endereco>();
   enderecos: Endereco[] = []; // <--- Precisa estar aqui!
   dataSource = new MatTableDataSource<Endereco>([]);
   displayedColumns: string[] = [
-    'logradouro', 'numero', 'complemento', 'bairro', 'cidade', 'estado', 'cep', 'principal'
+    'logradouro', 'numero', 'complemento', 'bairro', 'cidade', 'estado', 'cep', 'principal', "acoes"
   ];
 
 
@@ -49,6 +51,18 @@ export class LeadEnderecoListComponent implements OnInit {
   ngOnChanges(changes: SimpleChanges) {
     if (changes['leadId'] && this.leadId) {
       this.carregarEnderecos();
+    }
+  }
+  enderecoEditando?: Endereco;
+
+  onEditar(endereco: Endereco) {
+    this.editarEndereco.emit(endereco);
+  }
+  excluirEndereco(endereco: Endereco) {
+    if (confirm('Tem certeza que deseja excluir este endereço?')) {
+      this.leadService.deleteEndereco(endereco.id!).subscribe(() => {
+        this.carregarEnderecos(); // Atualize a lista
+      });
     }
   }
 

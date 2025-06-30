@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, numberAttribute } from '@angular/core';
+import {Component, Input, Output, EventEmitter, numberAttribute, SimpleChanges} from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { LeadService } from '../lead.service';
 import { Endereco } from '../../../models/endereco.model';
@@ -23,6 +23,8 @@ import { MatInputModule } from '@angular/material/input';
 })
 export class LeadEnderecoFormComponent {
   @Input({ transform: numberAttribute }) leadId!: number;
+  @Input() endereco?: Endereco | null;
+  @Output() cancelar = new EventEmitter<void>();
   @Output() enderecoSalvo = new EventEmitter<void>();
   form: FormGroup;
 
@@ -40,15 +42,33 @@ export class LeadEnderecoFormComponent {
     });
   }
 
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['endereco'] && this.endereco) {
+      this.form.patchValue(this.endereco);
+    } else if (!this.endereco) {
+      this.form.reset();
+    }
+  }
   onSubmit() {
     const endereco: Endereco = {
       ...this.form.value,
-      lead: { id: this.leadId }   // Envia só o id do lead!
+      lead: { id: this.leadId }
     };
-    this.leadService.adicionarEndereco(this.leadId, endereco).subscribe(() => {
-      this.enderecoSalvo.emit();
-      this.form.reset();
-    });
+    if (this.endereco && this.endereco.id) {
+      // EDITAR
+      endereco.id = this.endereco.id;
+      this.leadService.updateEndereco(endereco).subscribe(() => {
+        this.enderecoSalvo.emit();
+        this.form.reset();
+      });
+    } else {
+      // CRIAR
+      this.leadService.adicionarEndereco(endereco).subscribe(() => {
+        this.enderecoSalvo.emit();
+        this.form.reset();
+      });
+    }
   }
+
 
 }

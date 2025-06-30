@@ -5,6 +5,7 @@ import { LeadEnderecoListComponent } from '../lead-endereco-list/lead-endereco-l
 import { LeadEnderecoFormComponent } from '../lead-endereco-form/lead-endereco-form.component';
 import {MatIconModule} from '@angular/material/icon';
 import {NgIf} from '@angular/common';
+import {Endereco} from '../../../models/endereco.model';
 
 @Component({
   selector: 'app-lead-endereco',
@@ -16,6 +17,7 @@ import {NgIf} from '@angular/common';
 export class LeadEnderecoComponent {
   leadSelecionado?: Lead;
   adicionandoEndereco = false; // NOVO
+  enderecoEmEdicao?: Endereco | null = null;
 
   onLeadSelecionado(lead: Lead) {
     this.leadSelecionado = lead;
@@ -26,8 +28,16 @@ export class LeadEnderecoComponent {
     this.adicionandoEndereco = true;
   }
 
+  onEditarEndereco(endereco: Endereco) {
+    this.enderecoEmEdicao = { ...endereco };
+  }
+
   onEnderecoSalvo() {
-    this.adicionandoEndereco = false;
-    // aqui você pode acionar o refresh da lista, se necessário
+    this.enderecoEmEdicao = null;
+    // ... (refresh lista, se quiser)
+  }
+
+  onCancelarEdicao() {
+    this.enderecoEmEdicao = null;
   }
 }

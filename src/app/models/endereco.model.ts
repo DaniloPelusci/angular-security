@@ -12,5 +12,5 @@ export interface Endereco {
   estado: string;
   cep: string;
   principal?: boolean;
-  lead?: Lead | { id: number };  // <--- ADICIONADO
+  lead?: Lead | { id: number };
 }
