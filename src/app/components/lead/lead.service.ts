@@ -71,12 +71,10 @@ export class LeadService {
   adicionarEndereco(endereco: Endereco): Observable<Endereco> {
     return this.http.post<Endereco>(`http://localhost:8080/api/enderecos-lead`, endereco);
   }
-  // Para atualizar (PUT)
   updateEndereco( endereco: Endereco) {
     return this.http.put<Endereco>(`http://localhost:8080/api/enderecos-lead`, endereco);
   }
 
-  // Para excluir (DELETE)
     deleteEndereco( enderecoId: number) {
       return this.http.delete(`http://localhost:8080/api/enderecos-lead/${enderecoId}`);
     }

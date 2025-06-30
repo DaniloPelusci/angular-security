@@ -45,7 +45,7 @@
   <ng-container matColumnDef="acoes">
     <th mat-header-cell *matHeaderCellDef>Ações</th>
     <td mat-cell *matCellDef="let endereco">
-      <button mat-icon-button color="primary" (click)="onEditar(endereco)">
+      <button mat-icon-button color="accent" (click)="editarEndereco.emit(endereco)">
         <mat-icon>edit</mat-icon>
       </button>
 

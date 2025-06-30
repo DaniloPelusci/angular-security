@@ -16,28 +16,28 @@ import {Endereco} from '../../../models/endereco.model';
 })
 export class LeadEnderecoComponent {
   leadSelecionado?: Lead;
-  adicionandoEndereco = false; // NOVO
-  enderecoEmEdicao?: Endereco | null = null;
+  adicionandoEndereco = false;
+  enderecoParaEditar?: Endereco; // <--- NOVO
 
   onLeadSelecionado(lead: Lead) {
     this.leadSelecionado = lead;
-    this.adicionandoEndereco = false; // Sempre reseta ao selecionar um novo lead
+    this.adicionandoEndereco = false;
+    this.enderecoParaEditar = undefined;
   }
 
   mostrarFormEndereco() {
     this.adicionandoEndereco = true;
+    this.enderecoParaEditar = undefined; // Formulario vazio
   }
 
-  onEditarEndereco(endereco: Endereco) {
-    this.enderecoEmEdicao = { ...endereco };
+  editarEndereco(endereco: Endereco) {
+    this.enderecoParaEditar = { ...endereco };
+    this.adicionandoEndereco = true;
   }
 
   onEnderecoSalvo() {
-    this.enderecoEmEdicao = null;
-    // ... (refresh lista, se quiser)
-  }
-
-  onCancelarEdicao() {
-    this.enderecoEmEdicao = null;
+    this.adicionandoEndereco = false;
+    this.enderecoParaEditar = undefined;
+    // Pode chamar refresh de endereços se quiser
   }
 }

@@ -26,6 +26,7 @@ export class LeadEnderecoFormComponent {
   @Input() endereco?: Endereco | null;
   @Output() cancelar = new EventEmitter<void>();
   @Output() enderecoSalvo = new EventEmitter<void>();
+  @Input() enderecoParaEditar?: Endereco;
   form: FormGroup;
 
   constructor(private fb: FormBuilder, private leadService: LeadService) {
@@ -43,12 +44,16 @@ export class LeadEnderecoFormComponent {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes['endereco'] && this.endereco) {
-      this.form.patchValue(this.endereco);
-    } else if (!this.endereco) {
-      this.form.reset();
+    if (changes['enderecoParaEditar']) {
+      if (this.enderecoParaEditar) {
+        this.form.patchValue(this.enderecoParaEditar);
+      } else {
+        this.form.reset();
+      }
     }
   }
+
+
   onSubmit() {
     const endereco: Endereco = {
       ...this.form.value,

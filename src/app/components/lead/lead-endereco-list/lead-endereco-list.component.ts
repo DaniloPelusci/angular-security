@@ -53,11 +53,7 @@ export class LeadEnderecoListComponent implements OnInit {
       this.carregarEnderecos();
     }
   }
-  enderecoEditando?: Endereco;
 
-  onEditar(endereco: Endereco) {
-    this.editarEndereco.emit(endereco);
-  }
   excluirEndereco(endereco: Endereco) {
     if (confirm('Tem certeza que deseja excluir este endereço?')) {
       this.leadService.deleteEndereco(endereco.id!).subscribe(() => {
