@@ -78,6 +78,11 @@ export class LeadService {
     deleteEndereco( enderecoId: number) {
       return this.http.delete(`http://localhost:8080/api/enderecos-lead/${enderecoId}`);
     }
+  definirEnderecoPrincipal(leadId: number, enderecoId: number) {
+    return this.http.put(`http://localhost:8080/api/enderecos-lead/${leadId}/definir-principal/${enderecoId}`, null);
+  }
+
+
 
 
 

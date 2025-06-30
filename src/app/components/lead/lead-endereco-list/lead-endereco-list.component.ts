@@ -39,7 +39,7 @@ export class LeadEnderecoListComponent implements OnInit {
   enderecos: Endereco[] = []; // <--- Precisa estar aqui!
   dataSource = new MatTableDataSource<Endereco>([]);
   displayedColumns: string[] = [
-    'logradouro', 'numero', 'complemento', 'bairro', 'cidade', 'estado', 'cep', 'principal', "acoes"
+    'logradouro', 'numero', 'complemento', 'bairro', 'cidade', 'estado', 'cep', 'principal', 'acoes'
   ];
 
 
@@ -69,4 +69,13 @@ export class LeadEnderecoListComponent implements OnInit {
       this.dataSource.data = enderecos;
     });
   }
+
+  definirComoPrincipal(endereco: Endereco) {
+    if (this.leadId && endereco.id) {
+      this.leadService.definirEnderecoPrincipal(this.leadId, endereco.id).subscribe(() => {
+        this.carregarEnderecos();
+      });
+    }
+  }
+
 }

@@ -12,7 +12,7 @@
       <mat-icon>add_location_alt</mat-icon> Adicionar Endereço
     </button>
     <app-lead-endereco-list
-      [leadId]="leadSelecionado?.id"
+      [leadId]="leadSelecionado.id"
       (editarEndereco)="editarEndereco($event)">
     </app-lead-endereco-list>
   </div>
@@ -20,7 +20,7 @@
   <!-- Mostra form se está adicionando -->
   <div *ngIf="adicionandoEndereco">
     <app-lead-endereco-form
-      [leadId]="leadSelecionado?.id"
+      [leadId]="leadSelecionado.id"
       [enderecoParaEditar]="enderecoParaEditar"
       (enderecoSalvo)="onEnderecoSalvo()">
     </app-lead-endereco-form>
