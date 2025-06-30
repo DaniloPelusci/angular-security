@@ -1,4 +1,4 @@
-import {Component, Input, numberAttribute, OnInit} from '@angular/core';
+import {Component, Input, numberAttribute, OnInit, SimpleChanges} from '@angular/core';
 import {
   MatCell,
   MatCellDef, MatColumnDef, MatHeaderCell,
@@ -45,6 +45,11 @@ export class LeadEnderecoListComponent implements OnInit {
 
   ngOnInit() {
     this.carregarEnderecos();
+  }
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['leadId'] && this.leadId) {
+      this.carregarEnderecos();
+    }
   }
 
   carregarEnderecos() {
