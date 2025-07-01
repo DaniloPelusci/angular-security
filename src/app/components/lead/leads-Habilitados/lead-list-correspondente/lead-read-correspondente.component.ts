@@ -5,6 +5,9 @@ import { MatSortModule, MatSort } from '@angular/material/sort';
 import { Lead } from '../../../../models/lead.model';
 import { LeadService } from '../../lead.service';
 import {MatIconModule} from '@angular/material/icon';
+import {MatButton, MatIconButton} from '@angular/material/button';
+import {MatFormField, MatInput, MatLabel, MatSuffix} from '@angular/material/input';
+import {NgIf} from '@angular/common';
 
 
 
@@ -17,7 +20,7 @@ import {MatIconModule} from '@angular/material/icon';
     MatTableModule,
     MatPaginatorModule,
     MatSortModule,
-    MatTableModule, MatPaginatorModule, MatSortModule, MatIconModule]
+    MatTableModule, MatPaginatorModule, MatSortModule, MatIconModule, MatButton, MatFormField, MatIconButton, MatInput, MatLabel, MatSuffix, NgIf, MatFormField]
 })
 export class LeadReadCorrespondenteComponent implements AfterViewInit {
   leads: Lead[] = [];
@@ -30,7 +33,17 @@ export class LeadReadCorrespondenteComponent implements AfterViewInit {
 
   displayedColumns = ['id', 'nome', 'corretor', 'origem', 'status', 'editar'];
 
-  constructor(private leadService: LeadService) {}
+  constructor(private leadService: LeadService) {
+    this.dataSource.filterPredicate = (data: Lead, filter: string) => {
+      filter = filter.trim().toLowerCase();
+      return (
+        (data.nome?.toLowerCase() || '').includes(filter) ||
+        (data.corretor?.nome?.toLowerCase() || '').includes(filter) ||
+        (data.origem?.toLowerCase() || '').includes(filter) ||
+        (data.statusLeads?.toLowerCase() || '').includes(filter)
+      );
+    };
+  }
 
   ngAfterViewInit(): void {
     this.loadLeads();
@@ -48,5 +61,14 @@ export class LeadReadCorrespondenteComponent implements AfterViewInit {
 
   onEditLead(lead: Lead) {
     this.selectedLead = { ...lead };
+  }
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+
+  clearFilter() {
+    this.dataSource.filter = '';
   }
 }

@@ -6,12 +6,7 @@
   </button>
 </mat-form-field>
 
-<!-- Formulário de criar/editar -->
-<app-lead-create
-  *ngIf="selectedLead"
-  [leadToEdit]="selectedLead"
-  (saved)="onSaved()"
-></app-lead-create>
+
 
 
 <!-- Tabela de leads -->
@@ -64,3 +59,10 @@
     aria-label="Select page">
   </mat-paginator>
 </div>
+<!-- Formulário de criar/editar -->
+<app-lead-create
+  *ngIf="selectedLead"
+  [leadToEdit]="selectedLead"
+  (saved)="onSaved()"
+></app-lead-create>
+
