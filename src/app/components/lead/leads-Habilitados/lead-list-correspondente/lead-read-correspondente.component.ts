@@ -2,8 +2,8 @@ import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { MatTableModule, MatTable, MatTableDataSource } from '@angular/material/table';
 import { MatPaginatorModule, MatPaginator } from '@angular/material/paginator';
 import { MatSortModule, MatSort } from '@angular/material/sort';
-import { Lead } from '../../../models/lead.model';
-import { LeadService } from '../lead.service';
+import { Lead } from '../../../../models/lead.model';
+import { LeadService } from '../../lead.service';
 import {MatIconModule} from '@angular/material/icon';
 
 

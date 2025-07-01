@@ -6,6 +6,9 @@ import { Lead } from '../../../models/lead.model';
 import { LeadService } from '../lead.service';
 import {MatIconModule} from '@angular/material/icon';
 import {LeadCreateComponent} from '../lead-create/lead-create.component';
+import {NgIf} from '@angular/common';
+import {MatFormField, MatInput, MatLabel, MatSuffix} from '@angular/material/input';
+import {MatButton, MatIconButton} from '@angular/material/button';
 
 
 
@@ -19,7 +22,7 @@ import {LeadCreateComponent} from '../lead-create/lead-create.component';
     MatPaginatorModule,
     MatSortModule,
     LeadCreateComponent,
-    MatTableModule, MatPaginatorModule, MatSortModule, MatIconModule]
+    MatTableModule, MatPaginatorModule, MatSortModule, MatIconModule, NgIf, MatFormField, MatLabel, MatFormField, MatInput, MatSuffix, MatIconButton, MatButton]
 })
 export class LeadReadComponent implements AfterViewInit {
   leads: Lead[] = [];
@@ -32,8 +35,18 @@ export class LeadReadComponent implements AfterViewInit {
 
   displayedColumns = ['id', 'nome', 'corretor', 'origem', 'status', 'editar'];
 
-  constructor(private leadService: LeadService) {}
+  constructor(private leadService: LeadService) {
+    this.dataSource.filterPredicate = (data: Lead, filter: string) => {
+      filter = filter.trim().toLowerCase();
+      return (
+        (data.nome?.toLowerCase() || '').includes(filter) ||
+        (data.corretor?.nome?.toLowerCase() || '').includes(filter) ||
+        (data.origem?.toLowerCase() || '').includes(filter) ||
+        (data.statusLeads?.toLowerCase() || '').includes(filter)
+      );
+    };
 
+  }
   ngAfterViewInit(): void {
     this.loadLeads();
   }
@@ -59,5 +72,14 @@ export class LeadReadComponent implements AfterViewInit {
 
   onNewLead() {
     this.selectedLead = undefined; // Limpa o form para novo
+  }
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+
+  clearFilter() {
+    this.dataSource.filter = '';
   }
 }

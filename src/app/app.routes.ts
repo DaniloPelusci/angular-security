@@ -6,7 +6,7 @@ import { LeadCreateComponent } from './components/lead/lead-create/lead-create.c
 import { LeadReadComponent } from './components/lead/lead-read/lead-read.component';
 import {
   LeadReadCorrespondenteComponent
-} from './components/lead/lead-list-correspondente/lead-read-correspondente.component';
+} from './components/lead/leads-Habilitados/lead-list-correspondente/lead-read-correspondente.component';
 import {LeadEnderecoComponent} from './components/lead/endereco/lead-endereco/lead-endereco.component';
 
 export const routes: Routes = [

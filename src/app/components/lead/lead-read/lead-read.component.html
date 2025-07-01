@@ -1,8 +1,18 @@
+<mat-form-field appearance="outline" style="width: 300px; margin-bottom: 16px;">
+  <mat-label>Pesquisar</mat-label>
+  <input matInput (keyup)="applyFilter($event)" placeholder="Digite para buscar..." />
+  <button mat-button *ngIf="dataSource.filter" matSuffix mat-icon-button aria-label="Limpar" (click)="clearFilter()">
+    <mat-icon>close</mat-icon>
+  </button>
+</mat-form-field>
+
 <!-- Formulário de criar/editar -->
 <app-lead-create
+  *ngIf="selectedLead"
   [leadToEdit]="selectedLead"
   (saved)="onSaved()"
 ></app-lead-create>
+
 
 <!-- Tabela de leads -->
 <div class="mat-elevation-z2">
