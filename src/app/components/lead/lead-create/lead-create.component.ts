@@ -16,6 +16,7 @@ import { AuthService } from '../../../auth/services/auth.service';
 import { DocumentoLead } from '../../../models/documentoLead.model';
 import { LeadEnderecoListComponent } from '../endereco/lead-endereco-list/lead-endereco-list.component';
 import { LeadEnderecoFormComponent } from '../endereco/lead-endereco-form/lead-endereco-form.component';
+import {Endereco} from '../../../models/endereco.model';
 
 @Component({
   selector: 'app-lead-create',
@@ -35,6 +36,7 @@ import { LeadEnderecoFormComponent } from '../endereco/lead-endereco-form/lead-e
     MatSnackBarModule,
     FormsModule,
     LeadEnderecoListComponent,
+    LeadEnderecoFormComponent,
   ]
 })
 export class LeadCreateComponent implements OnChanges {
@@ -42,6 +44,14 @@ export class LeadCreateComponent implements OnChanges {
   @Output() saved = new EventEmitter<void>();
   leadForm: FormGroup;
   exibindoFormEndereco = false;
+  enderecoParaEditar?: Endereco | null = null;
+  abrirFormEndereco(endereco: Endereco) {
+    this.enderecoParaEditar = endereco;
+  }
+  aoSalvarEndereco() {
+    this.enderecoParaEditar = null;
+
+  }
 
   statusOptions = [
     { value: 'NOVO', label: 'Novo' },

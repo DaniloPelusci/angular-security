@@ -118,26 +118,21 @@
 </mat-card>
   <!-- ...formulário do lead, documentos etc... -->
 
-  <ng-container *ngIf="leadToEdit">
-    <!-- Mostra a lista de endereços se houver lead e ID -->
-    <app-lead-endereco-list
-      *ngIf="leadToEdit.id"
-      [leadId]="leadToEdit.id">
-    </app-lead-endereco-list>
+  <app-lead-endereco-list
+    *ngIf="leadToEdit && !enderecoParaEditar"
+    [leadId]="leadToEdit.id"
+    (editarEndereco)="abrirFormEndereco($event)">
+  </app-lead-endereco-list>
 
-    <!-- Se quiser mostrar o formulário para adicionar novo endereço,
-         pode colocar um botão para abrir o formulário aqui -->
-    <!--
-    <button mat-button (click)="abrirFormEndereco()">Adicionar Endereço</button>
-    <app-lead-endereco-form
-      *ngIf="exibindoFormEndereco"
-      [leadId]="leadToEdit.id"
-      (enderecoSalvo)="aoSalvarEndereco()"
-      (cancelar)="aoCancelarEndereco()">
-    </app-lead-endereco-form>
-    -->
+  <app-lead-endereco-form
+    *ngIf="leadToEdit && enderecoParaEditar"
+    [leadId]="leadToEdit.id"
+    [enderecoParaEditar]="enderecoParaEditar"
+    (enderecoSalvo)="aoSalvarEndereco()"
+    (cancelar)="enderecoParaEditar = null">
+  </app-lead-endereco-form>
 
-  </ng-container>
+
 
 
 </mat-card>
