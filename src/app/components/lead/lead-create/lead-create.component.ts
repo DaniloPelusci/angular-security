@@ -45,6 +45,7 @@ export class LeadCreateComponent implements OnChanges {
   leadForm: FormGroup;
   exibindoFormEndereco = false;
   enderecoParaEditar?: Endereco | null = null;
+  adicionandoEndereco = false;
   abrirFormEndereco(endereco: Endereco) {
     this.enderecoParaEditar = endereco;
   }
@@ -227,4 +228,10 @@ export class LeadCreateComponent implements OnChanges {
   onEnderecoSalvoOuCancelado() {
     this.exibindoFormEndereco = false;
   }
+
+  mostrarFormEndereco() {
+    this.adicionandoEndereco = true;
+    this.enderecoParaEditar = undefined; // Formulario vazio
+  }
+
 }

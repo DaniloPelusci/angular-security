@@ -118,11 +118,27 @@
 </mat-card>
   <!-- ...formulário do lead, documentos etc... -->
 
+  <button mat-raised-button color="primary" (click)="mostrarFormEndereco()">
+    <mat-icon>add_location_alt</mat-icon> Adicionar Endereço
+  </button>
+  <div *ngIf="adicionandoEndereco">
+    <app-lead-endereco-form
+      [leadId]="leadForm.get('id')?.value"
+      >
+    </app-lead-endereco-form>
+    <button mat-stroked-button color="warn" (click)="adicionandoEndereco = false" style="margin-top:12px;">
+      <mat-icon>arrow_back</mat-icon> Voltar para lista
+    </button>
+  </div>
+
   <app-lead-endereco-list
     *ngIf="leadToEdit && !enderecoParaEditar"
     [leadId]="leadToEdit.id"
     (editarEndereco)="abrirFormEndereco($event)">
   </app-lead-endereco-list>
+
+
+
 
   <app-lead-endereco-form
     *ngIf="leadToEdit && enderecoParaEditar"

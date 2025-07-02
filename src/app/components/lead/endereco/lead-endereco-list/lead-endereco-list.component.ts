@@ -13,6 +13,7 @@ import { LeadService } from '../../lead.service';
 import { Endereco } from '../../../../models/endereco.model';
 import {NgIf} from '@angular/common';
 import {MatIconModule} from '@angular/material/icon';
+import {MatPaginator} from '@angular/material/paginator';
 
 @Component({
   selector: 'app-lead-endereco-list',
@@ -29,7 +30,8 @@ import {MatIconModule} from '@angular/material/icon';
     MatHeaderCell,
     MatCell,
     MatHeaderRow,
-    MatRow
+    MatRow,
+    MatPaginator
   ],
   standalone: true
 })

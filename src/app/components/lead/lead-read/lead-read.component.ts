@@ -9,6 +9,7 @@ import {LeadCreateComponent} from '../lead-create/lead-create.component';
 import {NgIf} from '@angular/common';
 import {MatFormField, MatInput, MatLabel, MatSuffix} from '@angular/material/input';
 import {MatButton, MatIconButton} from '@angular/material/button';
+import {Endereco} from '../../../models/endereco.model';
 
 
 
@@ -82,4 +83,16 @@ export class LeadReadComponent implements AfterViewInit {
   clearFilter() {
     this.dataSource.filter = '';
   }
+  enderecoParaEditar: Endereco | null = null;
+
+
+
+  abrirFormEndereco(endereco: Endereco) {
+    this.enderecoParaEditar = { ...endereco }; // Clona para edição
+  }
+
+  aoSalvarEndereco() {
+    this.enderecoParaEditar = null;
+  }
+
 }

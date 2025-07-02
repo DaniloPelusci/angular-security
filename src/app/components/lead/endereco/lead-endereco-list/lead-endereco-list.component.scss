@@ -2,3 +2,24 @@
 .full-width { flex: 1 1 100%; }
 .half-width { flex: 1 1 48%; }
 mat-card { margin-bottom: 12px; }
+
+.full-width-table {
+  width: 100%;
+  min-width: 600px;
+}
+.badge-principal {
+  margin-left: 4px;
+  vertical-align: middle;
+}
+.action-cell button {
+  margin-right: 2px;
+}
+.no-data {
+  text-align: center;
+  color: #666;
+  padding: 16px 0 0 0;
+  font-size: 15px;
+}
+.text-center {
+  text-align: center;
+}
