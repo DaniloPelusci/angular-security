@@ -1,0 +1,27 @@
+.lead-form-card {
+  max-width: 500px;
+  margin:  auto;
+  padding: 16px 24px;
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.12);
+}
+
+.lead-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.button-group {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+.data-vencida {
+  background-color: #ffe5e5 !important; /* Vermelho clarinho */
+}
+

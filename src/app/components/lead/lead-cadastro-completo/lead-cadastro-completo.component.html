@@ -1,0 +1,10 @@
+<mat-card class="cadastro-lead-card">
+  <h2>Cadastro Completo do Lead</h2>
+
+  <app-lead-form (leadChange)="onLeadChange($event)"></app-lead-form>
+
+  <app-endereco-form (enderecoChange)="onEnderecosChange($event)"></app-endereco-form>
+  <mat-card class="lead-form-card">
+  <button mat-stroked-button color="primary" (click)="cadastrarCompleto()">Salvar Lead</button>
+  </mat-card>
+</mat-card>

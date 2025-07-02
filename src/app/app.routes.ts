@@ -8,6 +8,7 @@ import {
   LeadReadCorrespondenteComponent
 } from './components/lead/leads-Habilitados/lead-list-correspondente/lead-read-correspondente.component';
 import {LeadEnderecoComponent} from './components/lead/endereco/lead-endereco/lead-endereco.component';
+import {LeadCadastroCompletoComponent} from './components/lead/lead-cadastro-completo/lead-cadastro-completo.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -39,6 +40,12 @@ export const routes: Routes = [
   {
     path: 'endreco',
     component: LeadEnderecoComponent,
+    canActivate: [AuthGuard],
+    data: { roles: ['ROLE_ADMIN', "ROLE_CORRESPONDENTE"] }
+  },
+  {
+    path: 'lead/completo',
+    component: LeadCadastroCompletoComponent,
     canActivate: [AuthGuard],
     data: { roles: ['ROLE_ADMIN', "ROLE_CORRESPONDENTE"] }
   }

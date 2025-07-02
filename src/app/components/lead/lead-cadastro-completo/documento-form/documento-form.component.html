@@ -1,0 +1,40 @@
+<mat-card class="lead-form-card">
+  <h3>Documentos do Lead</h3>
+
+  <!-- Upload de documentos -->
+  <input type="file" multiple (change)="onFileChange($event)" />
+
+  <div *ngIf="arquivosParaUpload.length > 0" style="margin-top: 10px;">
+    <div *ngFor="let arq of arquivosParaUpload; let i = index">
+      <tr style="margin-bottom: 1px">- <span>{{ arq.name }}</span>
+      </tr>
+      <!-- Adicione outros campos se necessário, ex: tipo do documento -->
+    </div>
+    <button mat-raised-button color="primary" (click)="enviarArquivos()">
+      <mat-icon>upload</mat-icon>
+      Enviar Arquivos
+    </button>
+  </div>
+
+  <!-- Lista de documentos já cadastrados -->
+  <table class="mat-elevation-z1 full-width-table" *ngIf="documentos.length > 0" style="margin-top: 20px;">
+    <tr>
+      <th>Nome</th>
+      <th>Tipo</th>
+      <th>Data de Emissão</th>
+      <th>Ações</th>
+    </tr>
+    <tr *ngFor="let doc of documentos" [ngClass]="{'data-vencida': isDataVencida(doc.dataEmissao)}">   <td>{{ doc.nomeArquivo }}</td>
+      <td>{{ doc.tipoDocumento?.descricao }}</td>
+      <td>{{ doc.dataEmissao | date:'shortDate' }}</td>
+      <td>
+        <button mat-icon-button color="primary" (click)="baixarDocumento(doc.id, doc.nomeArquivo)">
+          <mat-icon>download</mat-icon>
+        </button>
+        <button mat-icon-button color="warn" (click)="deletarDocumento(doc.id)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </td>
+    </tr>
+  </table>
+</mat-card>

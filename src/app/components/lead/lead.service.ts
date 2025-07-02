@@ -13,11 +13,13 @@ import { Lead } from '../../models/lead.model';
 import { Observable } from 'rxjs';
 import {DocumentoLead} from '../../models/documentoLead.model';
 import {Endereco} from '../../models/endereco.model';
+import {LeadCadastroCompletoDTO} from '../../models/dto/leadCadastroCompletoDTO';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LeadService {
+
 
   baseUrl = "http://localhost:8080/leads";
   private apiUrl = "http://localhost:8080/api/leads";
@@ -82,8 +84,7 @@ export class LeadService {
     return this.http.put(`http://localhost:8080/api/enderecos-lead/${leadId}/definir-principal/${enderecoId}`, null);
   }
 
-
-
-
-
+  cadastrarCompleto(dto: LeadCadastroCompletoDTO) {
+    return this.http.post(`http://localhost:8080/api/leads/cadastro-completo`, dto);
+  }
 }
