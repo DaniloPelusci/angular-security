@@ -22,7 +22,7 @@
     </mat-form-field>
     <mat-form-field appearance="outline" class="full-width">
       <mat-label>Permissões</mat-label>
-      <mat-select formControlName="permissions" multiple>
+      <mat-select formControlName="permissions" multiple [compareWith]="comparePermissions">
         <mat-option *ngFor="let p of permissionsOptions" [value]="p">
           {{ p.description }}
         </mat-option>

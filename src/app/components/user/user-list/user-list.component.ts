@@ -37,13 +37,13 @@ export class UserListComponent implements AfterViewInit {
   @ViewChild(MatTable) table!: MatTable<Usuario>;
   dataSource = new MatTableDataSource<Usuario>();
 
-  displayedColumns = ['id', 'username', 'nome', 'email', 'telefone', 'editar'];
+  displayedColumns = ['id', 'userName', 'nome', 'email', 'telefone', 'editar'];
 
   constructor(private userService: UserService, private router: Router) {
     this.dataSource.filterPredicate = (data: Usuario, filter: string) => {
       filter = filter.trim().toLowerCase();
       return (
-        (data.username?.toLowerCase() || '').includes(filter) ||
+        (data.userName?.toLowerCase() || '').includes(filter) ||
         (data.nome?.toLowerCase() || '').includes(filter) ||
         (data.email?.toLowerCase() || '').includes(filter) ||
         (data.telefone?.toLowerCase() || '').includes(filter)

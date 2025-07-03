@@ -1,6 +1,6 @@
 export interface Usuario {
   id?: number;
-  username?: string;
+  userName?: string;
   password?: string;
   nome?: string;
   telefone?: string;

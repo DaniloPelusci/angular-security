@@ -1,7 +1,7 @@
 import {PermissionModel} from '../Permission.model';
 
 export interface UserCadastroDTO {
-  userName: string;
+  username: string;
   nome: string;
   email: string;
   telefone: string;

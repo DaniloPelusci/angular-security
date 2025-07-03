@@ -42,6 +42,9 @@ export class RegisterComponent implements OnInit {
       permissions: [[]]
     });
   }
+  comparePermissions(p1: PermissionModel, p2: PermissionModel): boolean {
+    return p1 && p2 ? p1.description === p2.description : p1 === p2;
+  }
 
   ngOnInit() {
     this.auth.getPermissions().subscribe({
@@ -56,7 +59,7 @@ export class RegisterComponent implements OnInit {
       this.userService.getById(this.editingUserId).subscribe({
         next: user => {
           this.form.patchValue({
-            userName: user.username || '',
+            userName: user.userName || '',
             nome: user.nome || '',
             email: user.email || '',
             telefone: user.telefone || '',
@@ -70,7 +73,7 @@ export class RegisterComponent implements OnInit {
 
   register() {
     const user = this.form.value as {
-      userName: string;
+      username: string;
       nome: string;
       email: string;
       telefone: string;
