@@ -10,6 +10,7 @@ import {
 import {LeadEnderecoComponent} from './components/lead/endereco/lead-endereco/lead-endereco.component';
 import {LeadCadastroCompletoComponent} from './components/lead/lead-cadastro-completo/lead-cadastro-completo.component';
 import {RegisterComponent} from './auth/register/register.component';
+import {UserListComponent} from './components/user/user-list/user-list.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -55,5 +56,11 @@ export const routes: Routes = [
     component: LeadCadastroCompletoComponent,
     canActivate: [AuthGuard],
     data: { roles: ['ROLE_ADMIN', "ROLE_CORRESPONDENTE"] }
+  },
+  {
+    path: 'users',
+    component: UserListComponent,
+    canActivate: [AuthGuard],
+    data: { roles: ['ROLE_ADMIN'] }
   }
 ];

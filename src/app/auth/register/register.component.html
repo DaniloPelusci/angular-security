@@ -1,4 +1,4 @@
-<mat-card>
+<mat-card class="lead-form-card">
   <form [formGroup]="form" (ngSubmit)="register()" class="register-form">
     <mat-form-field appearance="outline" class="full-width">
       <mat-label>Usuário</mat-label>
@@ -28,7 +28,9 @@
         </mat-option>
       </mat-select>
     </mat-form-field>
-    <button mat-raised-button color="primary" type="submit">Cadastrar</button>
+    <button mat-raised-button color="primary" type="submit">
+      {{ isEditing ? 'Atualizar' : 'Cadastrar' }}
+    </button>
     <div *ngIf="error" class="error-msg">{{ error }}</div>
   </form>
 </mat-card>
