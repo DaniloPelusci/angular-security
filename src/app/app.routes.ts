@@ -9,10 +9,17 @@ import {
 } from './components/lead/leads-Habilitados/lead-list-correspondente/lead-read-correspondente.component';
 import {LeadEnderecoComponent} from './components/lead/endereco/lead-endereco/lead-endereco.component';
 import {LeadCadastroCompletoComponent} from './components/lead/lead-cadastro-completo/lead-cadastro-completo.component';
+import {RegisterComponent} from './auth/register/register.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
+  {
+    path: 'register',
+    component: RegisterComponent,
+    canActivate: [AuthGuard],
+    data: { roles: ['ROLE_ADMIN'] }
+  },
   {
     path: 'dashboard',
     component: DashboardComponent,

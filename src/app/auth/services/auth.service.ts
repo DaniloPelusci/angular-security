@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { BehaviorSubject, tap } from 'rxjs';
+import {PermissionModel} from '../../models/Permission.model';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -26,6 +27,25 @@ export class AuthService {
     this.removeToken();
     this.jwtSubject.next(null);
     this.router.navigate(['/login']);
+  }
+
+  register(user: {
+    userName: string;
+    nome: string;
+    email: string;
+    telefone: string;
+    password: string;
+    permissions: PermissionModel[]
+  }) {
+    return this.http.post(
+      'http://localhost:8080/api/users',
+      user
+    );
+  }
+  getPermissions() {
+    return this.http.get<PermissionModel[]>(
+      'http://localhost:8080/api/permissions'
+    );
   }
 
   // Protege acesso ao localStorage com try/catch
