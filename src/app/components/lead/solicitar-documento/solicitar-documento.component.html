@@ -1,0 +1,11 @@
+<div class="solicitar-doc-container">
+  <app-lead-search (leadSelecionado)="selectedLead = $event" [selectedLeadId]="selectedLead?.id"></app-lead-search>
+  <button mat-raised-button color="primary" (click)="gerarLink()" [disabled]="!selectedLead">Gerar Link</button>
+
+  <div *ngIf="linkGerado" class="link-gerado">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Link Gerado</mat-label>
+      <input matInput [value]="linkGerado" readonly>
+    </mat-form-field>
+  </div>
+</div>

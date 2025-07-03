@@ -87,4 +87,7 @@ export class LeadService {
   cadastrarCompleto(dto: LeadCadastroCompletoDTO) {
     return this.http.post(`http://localhost:8080/api/leads/cadastro-completo`, dto);
   }
+  solicitarDocumentos(leadId: number) {
+    return this.http.post<{link: string}>(`http://localhost:8080/api/leads/${leadId}/solicitar-documentos`, {});
+  }
 }
