@@ -37,7 +37,8 @@ export class NavComponent {
     { label: 'Lista Leads Aptos', icon: 'list', route: '/listCorrespondente', roles: ['ROLE_ADMIN', 'ROLE_CORRESPONDENTE'] },
     { label: 'Criar lead', icon: 'note_add', route: 'lead/completo', roles: ['ROLE_ADMIN', 'ROLE_CORRETOR'] },
     { label: 'Documentos', icon: 'upload', route: '/leads/documento', roles: ['ROLE_ADMIN', 'ROLE_CORRETOR'] },
-    { label: 'Endereco Lead', icon: 'create', route: '/endreco', roles: ['ROLE_ADMIN', 'ROLE_CORRETOR'] }
+    { label: 'Endereco Lead', icon: 'create', route: '/endreco', roles: ['ROLE_ADMIN', 'ROLE_CORRETOR'] },
+    { label: 'Cadastrar Usuário', icon: 'person_add', route: '/register', roles: ['ROLE_ADMIN'] }
   ];
 
   logout() {

@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { LoginComponent } from './auth/login/login.component';
+import { RegisterComponent } from './auth/register/register.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { AuthGuard } from './auth/guards/auth.guard';
 import { LeadCreateComponent } from './components/lead/lead-create/lead-create.component';
@@ -13,6 +14,12 @@ import {LeadCadastroCompletoComponent} from './components/lead/lead-cadastro-com
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
+  {
+    path: 'register',
+    component: RegisterComponent,
+    canActivate: [AuthGuard],
+    data: { roles: ['ROLE_ADMIN'] }
+  },
   {
     path: 'dashboard',
     component: DashboardComponent,

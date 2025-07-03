@@ -22,6 +22,13 @@ export class AuthService {
     );
   }
 
+  register(user: import('../models/user-cadastro.dto').UserCadastroDTO) {
+    return this.http.post(
+      'http://localhost:8080/api/users',
+      user
+    );
+  }
+
   logout() {
     this.removeToken();
     this.jwtSubject.next(null);
