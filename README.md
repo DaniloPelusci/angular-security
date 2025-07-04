@@ -63,6 +63,31 @@ Sistema CRM desenvolvido para otimizar processos de captação, gestão e acompa
 - 🔄 Deploy em ambiente de nuvem.
 - 🔄 **Aplicativo mobile para Android e iOS.**
 
+## 📌 Estado Atual
+
+As principais funcionalidades já disponíveis no projeto incluem:
+
+- Cadastro de leads com upload de documentos e endereço.
+- Gerenciamento de endereços do lead (editar, excluir e definir principal).
+- Geração de link público para o lead enviar documentos.
+- Autenticação com login, registro de usuários e permissões.
+- Paginação e filtros básicos nas listagens.
+- Feedback visual com _snackbars_ durante as operações.
+
+## 📝 Próximas Etapas
+
+Funcionalidades planejadas para as versões futuras:
+
+- Converter lead em cliente adicionando módulos de contratos e pós-venda.
+- Cadastro de múltiplos endereços diretamente na criação do lead.
+- Histórico e auditoria detalhados de alterações de leads e endereços.
+- Notificações por e-mail ou push para acompanhamento do lead.
+- Dashboard completo com métricas de funil e performance por corretor.
+- Exportação de dados em CSV/Excel e política de exclusão segura.
+- Validações avançadas de uploads e permissões dinâmicas via painel.
+- Melhorias de segurança como refresh token e bloqueio de IP suspeito.
+- Integrações adicionais (WhatsApp, API pública, app mobile) e CI/CD.
+
 ---
 
 ## 🏆 Diferenciais
