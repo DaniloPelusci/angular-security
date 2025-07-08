@@ -71,7 +71,7 @@ As principais funcionalidades já disponíveis no projeto incluem:
 - Gerenciamento de endereços do lead (editar, excluir e definir principal).
 - Geração de link público para o lead enviar documentos.
 - Autenticação com login, registro de usuários e permissões.
-- Paginação e filtros básicos nas listagens.
+- Paginação e filtros básicos nas listagens.cd ..
 - Feedback visual com _snackbars_ durante as operações.
 
 ## 📝 Próximas Etapas
