@@ -1,0 +1,30 @@
+export interface Inspection {
+  id: number;
+  inspetorId?: number | null;
+  status?: string | null;
+  worder?: string | null;
+  inspector?: string | null;
+  client?: string | null;
+  name?: string | null;
+  address1?: string | null;
+  address2?: string | null;
+  city?: string | null;
+  zip?: string | null;
+  otype?: string | null;
+  duedate?: string | null;
+  rush?: string | null;
+  followup?: string | null;
+  vacant?: string | null;
+  mortgage?: string | null;
+  vandalism?: string | null;
+  freezeFlag?: string | null;
+  storm?: string | null;
+  roof?: string | null;
+  water?: string | null;
+  naturalFlag?: string | null;
+  fire?: string | null;
+  hazard?: string | null;
+  structure?: string | null;
+  mold?: string | null;
+  pump?: string | null;
+}

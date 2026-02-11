@@ -1,0 +1,34 @@
+.page-wrapper {
+  padding: 16px;
+}
+
+.import-box {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  margin: 16px 0;
+  background: #fff;
+  border-radius: 8px;
+}
+
+.file-name {
+  color: #555;
+  font-size: 0.9rem;
+}
+
+.filter-field {
+  width: min(420px, 100%);
+  margin-bottom: 12px;
+}
+
+.table-wrapper {
+  overflow: auto;
+  background: #fff;
+  border-radius: 8px;
+}
+
+table {
+  width: 100%;
+  min-width: 800px;
+}
