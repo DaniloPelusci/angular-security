@@ -19,6 +19,18 @@ Sistema CRM desenvolvido para otimizar processos de captação, gestão e acompa
 
 ---
 
+
+## 🔗 Integração Angular + Spring Security (Java)
+
+Para rodar frontend e backend juntos em ambiente local sem erro de CORS:
+
+1. Suba o backend Spring Security em `http://localhost:8080`.
+2. Suba o frontend Angular com `npm start` (ou `ng serve`).
+3. O Angular usa `proxy.conf.json` para redirecionar automaticamente chamadas `/auth` e `/api` para o backend Java.
+
+Isso permite manter chamadas HTTP relativas no frontend (ex.: `/auth/login`, `/api/users`) e simplifica a integração entre os dois projetos.
+
+---
 ## 🏗️ Tecnologias Utilizadas
 
 ### Backend
