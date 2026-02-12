@@ -10,12 +10,14 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSelectModule } from '@angular/material/select';
+import { HttpErrorResponse } from '@angular/common/http';
 import { finalize } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 
 import { Inspection } from '../../../models/inspection.model';
 import { Inspector } from '../../../models/inspector.model';
 import { InspectionService } from '../inspection.service';
+import { AuthService } from '../../../auth/services/auth.service';
 
 @Component({
   selector: 'app-inspection-import-list',
@@ -38,6 +40,7 @@ import { InspectionService } from '../inspection.service';
 })
 export class InspectionImportListComponent implements AfterViewInit {
   viewMode: 'inspections' | 'inspectors' = 'inspections';
+  readonly canManageInspectors: boolean;
   inspectionColumns: string[] = ['id', 'status', 'worder', 'client', 'name', 'city', 'duedate', 'actions'];
   inspectorColumns: string[] = ['id', 'nome', 'actions'];
 
@@ -60,8 +63,11 @@ export class InspectionImportListComponent implements AfterViewInit {
   constructor(
     private inspectionService: InspectionService,
     private snackBar: MatSnackBar,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private authService: AuthService
   ) {
+    this.canManageInspectors = this.authService.hasRole('ROLE_ADMIN');
+
     const routeView = this.route.snapshot.data['view'];
     if (routeView === 'inspectors') {
       this.viewMode = 'inspectors';
@@ -219,7 +225,7 @@ export class InspectionImportListComponent implements AfterViewInit {
           this.resetInspectorForm();
           this.loadInspectors();
         },
-        error: () => this.showMessage('Erro ao atualizar inspetor.')
+        error: (error) => this.showInspectorPermissionError(error, 'Erro ao atualizar inspetor.')
       });
       return;
     }
@@ -230,7 +236,7 @@ export class InspectionImportListComponent implements AfterViewInit {
         this.resetInspectorForm();
         this.loadInspectors();
       },
-      error: () => this.showMessage('Erro ao criar inspetor.')
+      error: (error) => this.showInspectorPermissionError(error, 'Erro ao criar inspetor.')
     });
   }
 
@@ -254,7 +260,7 @@ export class InspectionImportListComponent implements AfterViewInit {
         this.resetInspectorForm();
         this.loadInspectors();
       },
-      error: () => this.showMessage('Erro ao excluir inspetor.')
+      error: (error) => this.showInspectorPermissionError(error, 'Erro ao excluir inspetor.')
     });
   }
 
@@ -278,5 +284,14 @@ export class InspectionImportListComponent implements AfterViewInit {
       verticalPosition: 'top',
       horizontalPosition: 'right'
     });
+  }
+
+  private showInspectorPermissionError(error: unknown, fallbackMessage: string): void {
+    if (error instanceof HttpErrorResponse && error.status === 403) {
+      this.showMessage('Você não possui permissão para cadastrar, editar ou excluir inspetores.');
+      return;
+    }
+
+    this.showMessage(fallbackMessage);
   }
 }
