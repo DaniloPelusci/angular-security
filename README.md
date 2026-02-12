@@ -24,19 +24,11 @@ Sistema CRM desenvolvido para otimizar processos de captação, gestão e acompa
 
 Para rodar frontend e backend juntos em ambiente local sem erro de CORS:
 
-1. Suba o backend Spring Security (por padrão em `http://127.0.0.1:8080`).
+1. Suba o backend Spring Security em `http://localhost:8080`.
 2. Suba o frontend Angular com `npm start` (ou `ng serve`).
-3. O Angular usa `proxy.conf.mjs` para redirecionar automaticamente chamadas `/auth` e `/api` para o backend Java.
-
-Se o backend estiver em outro host/porta (por exemplo, Docker, WSL ou VM), defina a variável `BACKEND_URL` ao subir o frontend:
-
-```bash
-BACKEND_URL=http://host.docker.internal:8080 npm start
-```
+3. O Angular usa `proxy.conf.json` para redirecionar automaticamente chamadas `/auth` e `/api` para o backend Java.
 
 Isso permite manter chamadas HTTP relativas no frontend (ex.: `/auth/login`, `/api/users`) e simplifica a integração entre os dois projetos.
-
-> Dica de troubleshooting: erro `[vite] http proxy error ... ECONNREFUSED` normalmente indica que o backend alvo configurado no proxy não está acessível no endereço/porta atual.
 
 ---
 ## 🏗️ Tecnologias Utilizadas
