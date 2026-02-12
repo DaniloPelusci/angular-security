@@ -16,6 +16,7 @@ import { ActivatedRoute } from '@angular/router';
 
 import { Inspection } from '../../../models/inspection.model';
 import { Inspector } from '../../../models/inspector.model';
+import { PhotoInspection } from '../../../models/photo-inspection.model';
 import { InspectionService } from '../inspection.service';
 import { AuthService } from '../../../auth/services/auth.service';
 
@@ -39,13 +40,15 @@ import { AuthService } from '../../../auth/services/auth.service';
   styleUrl: './inspection-import-list.component.scss'
 })
 export class InspectionImportListComponent implements AfterViewInit {
-  viewMode: 'inspections' | 'inspectors' = 'inspections';
+  viewMode: 'inspections' | 'inspectors' | 'photos-inspections' = 'inspections';
   readonly canManageInspectors: boolean;
   inspectionColumns: string[] = ['id', 'status', 'worder', 'client', 'name', 'city', 'duedate', 'actions'];
   inspectorColumns: string[] = ['id', 'nome', 'actions'];
+  photosInspectionColumns: string[] = ['id', 'inspectionId', 'photoUrl', 'descricao', 'createdAt'];
 
   dataSource = new MatTableDataSource<Inspection>([]);
   inspectorsDataSource = new MatTableDataSource<Inspector>([]);
+  photosInspectionsDataSource = new MatTableDataSource<PhotoInspection>([]);
 
   selectedFile?: File;
   isLoading = false;
@@ -73,6 +76,10 @@ export class InspectionImportListComponent implements AfterViewInit {
       this.viewMode = 'inspectors';
     }
 
+    if (routeView === 'photos-inspections') {
+      this.viewMode = 'photos-inspections';
+    }
+
     this.dataSource.filterPredicate = (data: Inspection, filter: string) => {
       const search = filter.trim().toLowerCase();
       return [data.status, data.worder, data.client, data.name, data.city, data.duedate, data.inspector]
@@ -84,14 +91,28 @@ export class InspectionImportListComponent implements AfterViewInit {
       const search = filter.trim().toLowerCase();
       return (data.nome || '').toLowerCase().includes(search);
     };
+
+    this.photosInspectionsDataSource.filterPredicate = (data: PhotoInspection, filter: string) => {
+      const search = filter.trim().toLowerCase();
+      return [data.id, data.inspectionId, data.photoUrl, data.descricao, data.createdAt]
+        .filter((value) => value !== null && value !== undefined)
+        .some((value) => String(value).toLowerCase().includes(search));
+    };
   }
 
   ngAfterViewInit(): void {
     if (this.viewMode === 'inspections') {
       this.loadInspections();
+      this.loadInspectors();
+      return;
     }
 
-    this.loadInspectors();
+    if (this.viewMode === 'inspectors') {
+      this.loadInspectors();
+      return;
+    }
+
+    this.loadPhotosInspections();
   }
 
   onFileSelected(event: Event): void {
@@ -271,6 +292,25 @@ export class InspectionImportListComponent implements AfterViewInit {
   applyInspectorFilter(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value;
     this.inspectorsDataSource.filter = filterValue.trim().toLowerCase();
+  }
+
+
+  loadPhotosInspections(): void {
+    this.isLoading = true;
+    this.inspectionService
+      .listPhotosInspections()
+      .pipe(finalize(() => (this.isLoading = false)))
+      .subscribe({
+        next: (photosInspections) => {
+          this.photosInspectionsDataSource.data = photosInspections;
+        },
+        error: () => this.showMessage('Não foi possível carregar as fotos de inspeções.')
+      });
+  }
+
+  applyPhotosInspectionsFilter(event: Event): void {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.photosInspectionsDataSource.filter = filterValue.trim().toLowerCase();
   }
 
   private resetInspectorForm(): void {
