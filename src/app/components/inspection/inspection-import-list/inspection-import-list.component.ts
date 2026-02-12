@@ -9,9 +9,9 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import { MatTabsModule } from '@angular/material/tabs';
 import { MatSelectModule } from '@angular/material/select';
 import { finalize } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
 
 import { Inspection } from '../../../models/inspection.model';
 import { Inspector } from '../../../models/inspector.model';
@@ -31,13 +31,13 @@ import { InspectionService } from '../inspection.service';
     MatButtonModule,
     MatIconModule,
     MatSnackBarModule,
-    MatTabsModule,
     MatSelectModule
   ],
   templateUrl: './inspection-import-list.component.html',
   styleUrl: './inspection-import-list.component.scss'
 })
 export class InspectionImportListComponent implements AfterViewInit {
+  viewMode: 'inspections' | 'inspectors' = 'inspections';
   inspectionColumns: string[] = ['id', 'status', 'worder', 'client', 'name', 'city', 'duedate', 'actions'];
   inspectorColumns: string[] = ['id', 'nome', 'actions'];
 
@@ -59,8 +59,14 @@ export class InspectionImportListComponent implements AfterViewInit {
 
   constructor(
     private inspectionService: InspectionService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private route: ActivatedRoute
   ) {
+    const routeView = this.route.snapshot.data['view'];
+    if (routeView === 'inspectors') {
+      this.viewMode = 'inspectors';
+    }
+
     this.dataSource.filterPredicate = (data: Inspection, filter: string) => {
       const search = filter.trim().toLowerCase();
       return [data.status, data.worder, data.client, data.name, data.city, data.duedate, data.inspector]
@@ -75,7 +81,10 @@ export class InspectionImportListComponent implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.loadInspections();
+    if (this.viewMode === 'inspections') {
+      this.loadInspections();
+    }
+
     this.loadInspectors();
   }
 

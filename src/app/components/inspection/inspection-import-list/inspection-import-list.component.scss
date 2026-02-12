@@ -2,7 +2,7 @@
   padding: 16px;
 }
 
-.tab-content {
+.page-content {
   padding-top: 12px;
 }
 
@@ -45,6 +45,7 @@ table {
 
 .actions-cell {
   display: flex;
+  align-items: center;
   gap: 8px;
   flex-wrap: wrap;
 }

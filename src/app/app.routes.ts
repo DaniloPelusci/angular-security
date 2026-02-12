@@ -77,6 +77,12 @@ export const routes: Routes = [
     path: 'inspections',
     component: InspectionImportListComponent,
     canActivate: [AuthGuard],
-    data: { roles: ['ROLE_ADMIN', 'ROLE_CORRETOR'] }
+    data: { roles: ['ROLE_ADMIN', 'ROLE_CORRETOR'], view: 'inspections' }
+  },
+  {
+    path: 'inspectors',
+    component: InspectionImportListComponent,
+    canActivate: [AuthGuard],
+    data: { roles: ['ROLE_ADMIN', 'ROLE_CORRETOR'], view: 'inspectors' }
   }
 ];
