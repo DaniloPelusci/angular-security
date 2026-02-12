@@ -2,7 +2,12 @@
   padding: 16px;
 }
 
-.import-box {
+.tab-content {
+  padding-top: 12px;
+}
+
+.import-box,
+.editor-box {
   display: flex;
   align-items: center;
   gap: 12px;
@@ -10,6 +15,11 @@
   margin: 16px 0;
   background: #fff;
   border-radius: 8px;
+  flex-wrap: wrap;
+}
+
+.editor-box {
+  display: block;
 }
 
 .file-name {
@@ -30,5 +40,31 @@
 
 table {
   width: 100%;
-  min-width: 800px;
+  min-width: 980px;
+}
+
+.actions-cell {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(220px, 1fr));
+  gap: 10px;
+}
+
+.form-grid.one-column {
+  grid-template-columns: 1fr;
+}
+
+.actions-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.inspector-select {
+  width: min(420px, 100%);
 }
