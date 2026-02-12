@@ -12,6 +12,9 @@ import {LeadCadastroCompletoComponent} from './components/lead/lead-cadastro-com
 import {RegisterComponent} from './auth/register/register.component';
 import {UserListComponent} from './components/user/user-list/user-list.component';
 import {SolicitarDocumentoComponent} from './components/lead/solicitar-documento/solicitar-documento.component';
+import {
+  InspectionImportListComponent
+} from './components/inspection/inspection-import-list/inspection-import-list.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -69,5 +72,11 @@ export const routes: Routes = [
     component: UserListComponent,
     canActivate: [AuthGuard],
     data: { roles: ['ROLE_ADMIN'] }
+  },
+  {
+    path: 'inspections',
+    component: InspectionImportListComponent,
+    canActivate: [AuthGuard],
+    data: { roles: ['ROLE_ADMIN', 'ROLE_CORRETOR'] }
   }
 ];
