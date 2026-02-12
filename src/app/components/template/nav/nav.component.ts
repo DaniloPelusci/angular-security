@@ -38,6 +38,7 @@ export class NavComponent {
     { label: 'Criar lead', icon: 'note_add', route: 'lead/completo', roles: ['ROLE_ADMIN', 'ROLE_CORRETOR'] },
     { label: 'Documentos', icon: 'upload', route: '/leads/documento', roles: ['ROLE_ADMIN', 'ROLE_CORRETOR'] },
     { label: 'Inspeções', icon: 'fact_check', route: '/inspections', roles: ['ROLE_ADMIN', 'ROLE_CORRETOR'] },
+    { label: 'Cadastro de inspetor', icon: 'badge', route: '/inspectors', roles: ['ROLE_ADMIN', 'ROLE_CORRETOR'] },
     { label: 'Endereco Lead', icon: 'create', route: '/endreco', roles: ['ROLE_ADMIN', 'ROLE_CORRETOR'] },
     { label: 'Usuários', icon: 'people', route: '/users', roles: ['ROLE_ADMIN'] },
     { label: 'Cadastrar Usuário', icon: 'person_add', route: '/register', roles: ['ROLE_ADMIN'] }  ];

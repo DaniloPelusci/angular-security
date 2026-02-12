@@ -1,181 +1,180 @@
 <section class="page-wrapper">
-  <h2>Gestão de inspeções</h2>
+  <h2 *ngIf="viewMode === 'inspections'">Gestão de inspeções</h2>
+  <h2 *ngIf="viewMode === 'inspectors'">Cadastro de inspetor</h2>
 
-  <mat-tab-group>
-    <mat-tab label="Inspeções">
-      <div class="tab-content">
-        <div class="import-box mat-elevation-z2">
-          <input type="file" accept=".xlsx,.xls" (change)="onFileSelected($event)" />
+  <div *ngIf="viewMode === 'inspections'" class="page-content">
+    <div class="import-box mat-elevation-z2">
+      <input type="file" accept=".xlsx,.xls" (change)="onFileSelected($event)" />
 
-          <button mat-raised-button color="primary" (click)="importExcel()" [disabled]="isLoading">
-            <mat-icon>upload_file</mat-icon>
-            Importar planilha
-          </button>
+      <button mat-raised-button color="primary" (click)="importExcel()" [disabled]="isLoading">
+        <mat-icon>upload_file</mat-icon>
+        Importar planilha
+      </button>
 
-          <span class="file-name" *ngIf="selectedFile">{{ selectedFile.name }}</span>
-        </div>
+      <span class="file-name" *ngIf="selectedFile">{{ selectedFile.name }}</span>
+    </div>
 
-        <mat-form-field appearance="outline" class="filter-field">
-          <mat-label>Buscar inspeções</mat-label>
-          <input matInput (keyup)="applyInspectionFilter($event)" placeholder="Status, cliente, cidade..." />
-          <button mat-icon-button matSuffix *ngIf="dataSource.filter" (click)="clearInspectionFilter()" aria-label="Limpar filtro">
-            <mat-icon>close</mat-icon>
-          </button>
+    <mat-form-field appearance="outline" class="filter-field">
+      <mat-label>Buscar inspeções</mat-label>
+      <input matInput (keyup)="applyInspectionFilter($event)" placeholder="Status, cliente, cidade..." />
+      <button mat-icon-button matSuffix *ngIf="dataSource.filter" (click)="clearInspectionFilter()" aria-label="Limpar filtro">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-form-field>
+
+    <div class="table-wrapper mat-elevation-z2">
+      <table mat-table [dataSource]="dataSource" matSort>
+        <ng-container matColumnDef="id">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
+          <td mat-cell *matCellDef="let row">{{ row.id }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
+          <td mat-cell *matCellDef="let row">{{ row.status || '-' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="worder">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Work order</th>
+          <td mat-cell *matCellDef="let row">{{ row.worder || '-' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="client">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Cliente</th>
+          <td mat-cell *matCellDef="let row">{{ row.client || '-' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Nome</th>
+          <td mat-cell *matCellDef="let row">{{ row.name || '-' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="city">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Cidade</th>
+          <td mat-cell *matCellDef="let row">{{ row.city || '-' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="duedate">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Due date</th>
+          <td mat-cell *matCellDef="let row">{{ row.duedate || '-' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Ações</th>
+          <td mat-cell *matCellDef="let row">
+            <div class="actions-cell">
+              <button mat-stroked-button color="primary" (click)="startEditInspection(row)">Editar</button>
+              <button mat-stroked-button color="warn" (click)="deleteInspection(row)">Excluir</button>
+              <button mat-stroked-button (click)="openAssignInspector(row)">Adicionar inspetor</button>
+            </div>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="inspectionColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: inspectionColumns"></tr>
+      </table>
+
+      <mat-paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 25]" aria-label="Paginação"></mat-paginator>
+    </div>
+
+    <div class="editor-box mat-elevation-z2" *ngIf="inspectionEditing">
+      <h3>Edição da inspeção #{{ inspectionEditing.id }}</h3>
+
+      <div class="form-grid">
+        <mat-form-field appearance="outline">
+          <mat-label>Status</mat-label>
+          <input matInput [(ngModel)]="inspectionEditing.status" />
         </mat-form-field>
 
-        <div class="table-wrapper mat-elevation-z2">
-          <table mat-table [dataSource]="dataSource" matSort>
-            <ng-container matColumnDef="id">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
-              <td mat-cell *matCellDef="let row">{{ row.id }}</td>
-            </ng-container>
-
-            <ng-container matColumnDef="status">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
-              <td mat-cell *matCellDef="let row">{{ row.status || '-' }}</td>
-            </ng-container>
-
-            <ng-container matColumnDef="worder">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header>Work order</th>
-              <td mat-cell *matCellDef="let row">{{ row.worder || '-' }}</td>
-            </ng-container>
-
-            <ng-container matColumnDef="client">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header>Cliente</th>
-              <td mat-cell *matCellDef="let row">{{ row.client || '-' }}</td>
-            </ng-container>
-
-            <ng-container matColumnDef="name">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header>Nome</th>
-              <td mat-cell *matCellDef="let row">{{ row.name || '-' }}</td>
-            </ng-container>
-
-            <ng-container matColumnDef="city">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header>Cidade</th>
-              <td mat-cell *matCellDef="let row">{{ row.city || '-' }}</td>
-            </ng-container>
-
-            <ng-container matColumnDef="duedate">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header>Due date</th>
-              <td mat-cell *matCellDef="let row">{{ row.duedate || '-' }}</td>
-            </ng-container>
-
-            <ng-container matColumnDef="actions">
-              <th mat-header-cell *matHeaderCellDef>Ações</th>
-              <td mat-cell *matCellDef="let row" class="actions-cell">
-                <button mat-stroked-button color="primary" (click)="startEditInspection(row)">Editar</button>
-                <button mat-stroked-button color="warn" (click)="deleteInspection(row)">Excluir</button>
-                <button mat-stroked-button (click)="openAssignInspector(row)">Adicionar inspetor</button>
-              </td>
-            </ng-container>
-
-            <tr mat-header-row *matHeaderRowDef="inspectionColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: inspectionColumns"></tr>
-          </table>
-
-          <mat-paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 25]" aria-label="Paginação"></mat-paginator>
-        </div>
-
-        <div class="editor-box mat-elevation-z2" *ngIf="inspectionEditing">
-          <h3>Edição da inspeção #{{ inspectionEditing.id }}</h3>
-
-          <div class="form-grid">
-            <mat-form-field appearance="outline">
-              <mat-label>Status</mat-label>
-              <input matInput [(ngModel)]="inspectionEditing.status" />
-            </mat-form-field>
-
-            <mat-form-field appearance="outline">
-              <mat-label>Cliente</mat-label>
-              <input matInput [(ngModel)]="inspectionEditing.client" />
-            </mat-form-field>
-
-            <mat-form-field appearance="outline">
-              <mat-label>Cidade</mat-label>
-              <input matInput [(ngModel)]="inspectionEditing.city" />
-            </mat-form-field>
-
-            <mat-form-field appearance="outline">
-              <mat-label>Due date</mat-label>
-              <input matInput [(ngModel)]="inspectionEditing.duedate" />
-            </mat-form-field>
-          </div>
-
-          <div class="actions-row">
-            <button mat-raised-button color="primary" (click)="saveInspection()">Salvar edição</button>
-            <button mat-button (click)="cancelEditInspection()">Cancelar</button>
-          </div>
-        </div>
-
-        <div class="editor-box mat-elevation-z2" *ngIf="inspectionForInspectorAssign">
-          <h3>Vincular inspetor na inspeção #{{ inspectionForInspectorAssign.id }}</h3>
-
-          <mat-form-field appearance="outline" class="inspector-select">
-            <mat-label>Inspetor</mat-label>
-            <mat-select [(value)]="selectedInspectorId">
-              <mat-option *ngFor="let inspector of inspectorsDataSource.data" [value]="inspector.id">
-                {{ inspector.nome }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-
-          <div class="actions-row">
-            <button mat-raised-button color="accent" (click)="assignInspector()">Adicionar inspetor</button>
-          </div>
-        </div>
-      </div>
-    </mat-tab>
-
-    <mat-tab label="Cadastro de inspetor">
-      <div class="tab-content">
-        <div class="editor-box mat-elevation-z2">
-          <h3>{{ inspectorForm.id ? 'Editar inspetor' : 'Novo inspetor' }}</h3>
-
-          <div class="form-grid one-column">
-            <mat-form-field appearance="outline">
-              <mat-label>Nome do inspetor</mat-label>
-              <input matInput [(ngModel)]="inspectorForm.nome" />
-            </mat-form-field>
-          </div>
-
-          <div class="actions-row">
-            <button mat-raised-button color="primary" (click)="saveInspector()">
-              {{ inspectorForm.id ? 'Salvar alteração' : 'Cadastrar' }}
-            </button>
-            <button mat-button *ngIf="inspectorForm.id" (click)="cancelInspectorEdit()">Cancelar</button>
-          </div>
-        </div>
-
-        <mat-form-field appearance="outline" class="filter-field">
-          <mat-label>Buscar inspetor</mat-label>
-          <input matInput (keyup)="applyInspectorFilter($event)" placeholder="Digite o nome" />
+        <mat-form-field appearance="outline">
+          <mat-label>Cliente</mat-label>
+          <input matInput [(ngModel)]="inspectionEditing.client" />
         </mat-form-field>
 
-        <div class="table-wrapper mat-elevation-z2">
-          <table mat-table [dataSource]="inspectorsDataSource">
-            <ng-container matColumnDef="id">
-              <th mat-header-cell *matHeaderCellDef>ID</th>
-              <td mat-cell *matCellDef="let row">{{ row.id }}</td>
-            </ng-container>
+        <mat-form-field appearance="outline">
+          <mat-label>Cidade</mat-label>
+          <input matInput [(ngModel)]="inspectionEditing.city" />
+        </mat-form-field>
 
-            <ng-container matColumnDef="nome">
-              <th mat-header-cell *matHeaderCellDef>Nome</th>
-              <td mat-cell *matCellDef="let row">{{ row.nome }}</td>
-            </ng-container>
-
-            <ng-container matColumnDef="actions">
-              <th mat-header-cell *matHeaderCellDef>Ações</th>
-              <td mat-cell *matCellDef="let row" class="actions-cell">
-                <button mat-stroked-button color="primary" (click)="editInspector(row)">Editar</button>
-                <button mat-stroked-button color="warn" (click)="deleteInspector(row)">Excluir</button>
-              </td>
-            </ng-container>
-
-            <tr mat-header-row *matHeaderRowDef="inspectorColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: inspectorColumns"></tr>
-          </table>
-        </div>
+        <mat-form-field appearance="outline">
+          <mat-label>Due date</mat-label>
+          <input matInput [(ngModel)]="inspectionEditing.duedate" />
+        </mat-form-field>
       </div>
-    </mat-tab>
-  </mat-tab-group>
+
+      <div class="actions-row">
+        <button mat-raised-button color="primary" (click)="saveInspection()">Salvar edição</button>
+        <button mat-button (click)="cancelEditInspection()">Cancelar</button>
+      </div>
+    </div>
+
+    <div class="editor-box mat-elevation-z2" *ngIf="inspectionForInspectorAssign">
+      <h3>Vincular inspetor na inspeção #{{ inspectionForInspectorAssign.id }}</h3>
+
+      <mat-form-field appearance="outline" class="inspector-select">
+        <mat-label>Inspetor</mat-label>
+        <mat-select [(value)]="selectedInspectorId">
+          <mat-option *ngFor="let inspector of inspectorsDataSource.data" [value]="inspector.id">
+            {{ inspector.nome }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <div class="actions-row">
+        <button mat-raised-button color="accent" (click)="assignInspector()">Adicionar inspetor</button>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="viewMode === 'inspectors'" class="page-content">
+    <div class="editor-box mat-elevation-z2">
+      <h3>{{ inspectorForm.id ? 'Editar inspetor' : 'Novo inspetor' }}</h3>
+
+      <div class="form-grid one-column">
+        <mat-form-field appearance="outline">
+          <mat-label>Nome do inspetor</mat-label>
+          <input matInput [(ngModel)]="inspectorForm.nome" />
+        </mat-form-field>
+      </div>
+
+      <div class="actions-row">
+        <button mat-raised-button color="primary" (click)="saveInspector()">
+          {{ inspectorForm.id ? 'Salvar alteração' : 'Cadastrar' }}
+        </button>
+        <button mat-button *ngIf="inspectorForm.id" (click)="cancelInspectorEdit()">Cancelar</button>
+      </div>
+    </div>
+
+    <mat-form-field appearance="outline" class="filter-field">
+      <mat-label>Buscar inspetor</mat-label>
+      <input matInput (keyup)="applyInspectorFilter($event)" placeholder="Digite o nome" />
+    </mat-form-field>
+
+    <div class="table-wrapper mat-elevation-z2">
+      <table mat-table [dataSource]="inspectorsDataSource">
+        <ng-container matColumnDef="id">
+          <th mat-header-cell *matHeaderCellDef>ID</th>
+          <td mat-cell *matCellDef="let row">{{ row.id }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="nome">
+          <th mat-header-cell *matHeaderCellDef>Nome</th>
+          <td mat-cell *matCellDef="let row">{{ row.nome }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Ações</th>
+          <td mat-cell *matCellDef="let row">
+            <div class="actions-cell">
+              <button mat-stroked-button color="primary" (click)="editInspector(row)">Editar</button>
+              <button mat-stroked-button color="warn" (click)="deleteInspector(row)">Excluir</button>
+            </div>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="inspectorColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: inspectorColumns"></tr>
+      </table>
+    </div>
+  </div>
 </section>
