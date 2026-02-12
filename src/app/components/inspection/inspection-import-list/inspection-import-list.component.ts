@@ -66,7 +66,7 @@ export class InspectionImportListComponent implements AfterViewInit {
     private route: ActivatedRoute,
     private authService: AuthService
   ) {
-    this.canManageInspectors = this.authService.hasRole('ROLE_ADMIN');
+    this.canManageInspectors = this.authService.hasAnyRole(['ROLE_ADMIN', 'ROLE_CORRETOR']);
 
     const routeView = this.route.snapshot.data['view'];
     if (routeView === 'inspectors') {
