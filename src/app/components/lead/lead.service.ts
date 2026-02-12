@@ -1,93 +1,98 @@
-import { validateHorizontalPosition } from '@angular/cdk/overlay';
 import { Injectable } from '@angular/core';
-import {
-  MatSnackBar,
-  MatSnackBarAction,
-  MatSnackBarActions,
-  MatSnackBarLabel,
-  MatSnackBarRef,
-} from '@angular/material/snack-bar';
-import { LeadCreateComponent } from './lead-create/lead-create.component';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
-import { Lead } from '../../models/lead.model';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import {DocumentoLead} from '../../models/documentoLead.model';
-import {Endereco} from '../../models/endereco.model';
-import {LeadCadastroCompletoDTO} from '../../models/dto/leadCadastroCompletoDTO';
+import { Lead } from '../../models/lead.model';
+import { DocumentoLead } from '../../models/documentoLead.model';
+import { Endereco } from '../../models/endereco.model';
+import { LeadCadastroCompletoDTO } from '../../models/dto/leadCadastroCompletoDTO';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LeadService {
+  private readonly apiBaseUrl = environment.apiBaseUrl;
+  private readonly leadsApiUrl = `${this.apiBaseUrl}/api/leads`;
+  private readonly correspondentesApiUrl = `${this.apiBaseUrl}/api/correspondente/leads/completos`;
+  private readonly usersApiUrl = `${this.apiBaseUrl}/api/users`;
+  private readonly documentosLeadApiUrl = `${this.apiBaseUrl}/api/documentos-lead`;
+  private readonly enderecosLeadApiUrl = `${this.apiBaseUrl}/api/enderecos-lead`;
 
+  constructor(
+    private snackBar: MatSnackBar,
+    private http: HttpClient
+  ) {}
 
-  baseUrl = "http://localhost:8080/leads";
-  private apiUrl = "http://localhost:8080/api/leads";
-  private apiCorresp = "http://localhost:8080/api/correspondente/leads/completos";
-  constructor(private snackBar: MatSnackBar, private http: HttpClient) { }
-
-  showOnConsole(msg: string): void{
-    this.snackBar.open(msg , '',{
-      duration:3000,
-      horizontalPosition: "right",
-      verticalPosition: "top"
-    })
-
+  showOnConsole(msg: string): void {
+    this.snackBar.open(msg, '', {
+      duration: 3000,
+      horizontalPosition: 'right',
+      verticalPosition: 'top'
+    });
   }
 
   read(): Observable<Lead[]> {
-    return this.http.get<Lead[]>(this.apiUrl);
+    return this.http.get<Lead[]>(this.leadsApiUrl);
   }
+
   listCorrespondent(): Observable<Lead[]> {
-    return this.http.get<Lead[]>(this.apiCorresp);
+    return this.http.get<Lead[]>(this.correspondentesApiUrl);
   }
 
   create(lead: Lead): Observable<Lead> {
-    return this.http.post<Lead>(this.apiUrl, lead);
+    return this.http.post<Lead>(this.leadsApiUrl, lead);
   }
 
   update(lead: Lead): Observable<Lead> {
-    return this.http.put<Lead>(`${this.apiUrl}/${lead.id}`, lead);
+    return this.http.put<Lead>(`${this.leadsApiUrl}/${lead.id}`, lead);
   }
-  listCorretores(): Observable<{ id: number, nome: string }[]> {
-    return this.http.get<{ id: number, nome: string }[]>('http://localhost:8080/api/users/corretores');
+
+  listCorretores(): Observable<{ id: number; nome: string }[]> {
+    return this.http.get<{ id: number; nome: string }[]>(`${this.usersApiUrl}/corretores`);
   }
 
   uploadDocumentos(formData: FormData) {
-    return this.http.post('http://localhost:8080/api/documentos-lead/upload', formData)
+    return this.http.post(`${this.documentosLeadApiUrl}/upload`, formData);
   }
+
   getDocumentosDoLead(leadId: number) {
-    return this.http.get<DocumentoLead[]>(`http://localhost:8080/api/documentos-lead/lead/${leadId}`);
+    return this.http.get<DocumentoLead[]>(`${this.documentosLeadApiUrl}/lead/${leadId}`);
   }
 
   downloadDocumento(id: number) {
-    return this.http.get(`http://localhost:8080/api/documentos-lead/${id}/download`, { responseType: 'blob' });
+    return this.http.get(`${this.documentosLeadApiUrl}/${id}/download`, { responseType: 'blob' });
   }
 
   deletarDocumento(documentoId: number) {
-    return this.http.delete(`http://localhost:8080/api/documentos-lead/${documentoId}`);
-  }
-  listarEnderecosDoLead(leadId?: number): Observable<Endereco[]> {
-    return this.http.get<Endereco[]>(`http://localhost:8080/api/enderecos-lead/lead/${leadId}`);
-  }
-  adicionarEndereco(endereco: Endereco): Observable<Endereco> {
-    return this.http.post<Endereco>(`http://localhost:8080/api/enderecos-lead`, endereco);
-  }
-  updateEndereco( endereco: Endereco) {
-    return this.http.put<Endereco>(`http://localhost:8080/api/enderecos-lead`, endereco);
+    return this.http.delete(`${this.documentosLeadApiUrl}/${documentoId}`);
   }
 
-    deleteEndereco( enderecoId: number) {
-      return this.http.delete(`http://localhost:8080/api/enderecos-lead/${enderecoId}`);
-    }
+  listarEnderecosDoLead(leadId?: number): Observable<Endereco[]> {
+    return this.http.get<Endereco[]>(`${this.enderecosLeadApiUrl}/lead/${leadId}`);
+  }
+
+  adicionarEndereco(endereco: Endereco): Observable<Endereco> {
+    return this.http.post<Endereco>(this.enderecosLeadApiUrl, endereco);
+  }
+
+  updateEndereco(endereco: Endereco) {
+    return this.http.put<Endereco>(this.enderecosLeadApiUrl, endereco);
+  }
+
+  deleteEndereco(enderecoId: number) {
+    return this.http.delete(`${this.enderecosLeadApiUrl}/${enderecoId}`);
+  }
+
   definirEnderecoPrincipal(leadId: number, enderecoId: number) {
-    return this.http.put(`http://localhost:8080/api/enderecos-lead/${leadId}/definir-principal/${enderecoId}`, null);
+    return this.http.put(`${this.enderecosLeadApiUrl}/${leadId}/definir-principal/${enderecoId}`, null);
   }
 
   cadastrarCompleto(dto: LeadCadastroCompletoDTO) {
-    return this.http.post(`http://localhost:8080/api/leads/cadastro-completo`, dto);
+    return this.http.post(`${this.leadsApiUrl}/cadastro-completo`, dto);
   }
+
   solicitarDocumentos(leadId: number) {
-    return this.http.post<{link: string}>(`http://localhost:8080/api/leads/${leadId}/solicitar-documentos`, {});
+    return this.http.post<{ link: string }>(`${this.leadsApiUrl}/${leadId}/solicitar-documentos`, {});
   }
 }

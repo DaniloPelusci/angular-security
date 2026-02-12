@@ -3,13 +3,14 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Inspection } from '../../models/inspection.model';
 import { Inspector } from '../../models/inspector.model';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class InspectionService {
-  private readonly inspectionsApiUrl = 'http://localhost:8080/api/inspections';
-  private readonly inspectorsApiUrl = 'http://localhost:8080/api/inspetores';
+  private readonly inspectionsApiUrl = `${environment.apiBaseUrl}/api/inspections`;
+  private readonly inspectorsApiUrl = `${environment.apiBaseUrl}/api/inspetores`;
 
   constructor(private http: HttpClient) {}
 
