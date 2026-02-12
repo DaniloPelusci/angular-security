@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { catchError, Observable, throwError } from 'rxjs';
 import { Inspection } from '../../models/inspection.model';
 import { Inspector } from '../../models/inspector.model';
 import { PhotoInspection } from '../../models/photo-inspection.model';
@@ -12,6 +12,7 @@ import { environment } from '../../../environments/environment';
 export class InspectionService {
   private readonly inspectionsApiUrl = `${environment.apiBaseUrl}/api/inspections`;
   private readonly inspectorsApiUrl = `${environment.apiBaseUrl}/api/inspetores`;
+  private readonly inspectorsApiUrlFallback = `${environment.apiBaseUrl}/api/inspectors`;
   private readonly photosInspectionsApiUrl = `${environment.apiBaseUrl}/api/fotosinspections`;
 
   constructor(private http: HttpClient) {}
@@ -39,22 +40,34 @@ export class InspectionService {
   }
 
   listInspectors(): Observable<Inspector[]> {
-    return this.http.get<Inspector[]>(this.inspectorsApiUrl);
+    return this.inspectorRequestWithFallback((url) => this.http.get<Inspector[]>(url));
   }
 
   createInspector(inspector: Inspector): Observable<Inspector> {
-    return this.http.post<Inspector>(this.inspectorsApiUrl, inspector);
+    return this.inspectorRequestWithFallback((url) => this.http.post<Inspector>(url, inspector));
   }
 
   updateInspector(inspector: Inspector): Observable<Inspector> {
-    return this.http.put<Inspector>(`${this.inspectorsApiUrl}/${inspector.id}`, inspector);
+    return this.inspectorRequestWithFallback((url) => this.http.put<Inspector>(`${url}/${inspector.id}`, inspector));
   }
 
   deleteInspector(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.inspectorsApiUrl}/${id}`);
+    return this.inspectorRequestWithFallback((url) => this.http.delete<void>(`${url}/${id}`));
   }
 
   listPhotosInspections(): Observable<PhotoInspection[]> {
     return this.http.get<PhotoInspection[]>(this.photosInspectionsApiUrl);
+  }
+
+  private inspectorRequestWithFallback<T>(request: (baseUrl: string) => Observable<T>): Observable<T> {
+    return request(this.inspectorsApiUrl).pipe(
+      catchError((error) => {
+        if (![403, 404, 405].includes(error?.status)) {
+          return throwError(() => error);
+        }
+
+        return request(this.inspectorsApiUrlFallback);
+      })
+    );
   }
 }
