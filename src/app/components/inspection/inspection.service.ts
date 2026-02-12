@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Inspection } from '../../models/inspection.model';
 import { Inspector } from '../../models/inspector.model';
+import { PhotoInspection } from '../../models/photo-inspection.model';
 import { environment } from '../../../environments/environment';
 
 @Injectable({
@@ -11,6 +12,7 @@ import { environment } from '../../../environments/environment';
 export class InspectionService {
   private readonly inspectionsApiUrl = `${environment.apiBaseUrl}/api/inspections`;
   private readonly inspectorsApiUrl = `${environment.apiBaseUrl}/api/inspetores`;
+  private readonly photosInspectionsApiUrl = `${environment.apiBaseUrl}/api/fotosinspections`;
 
   constructor(private http: HttpClient) {}
 
@@ -50,5 +52,9 @@ export class InspectionService {
 
   deleteInspector(id: number): Observable<void> {
     return this.http.delete<void>(`${this.inspectorsApiUrl}/${id}`);
+  }
+
+  listPhotosInspections(): Observable<PhotoInspection[]> {
+    return this.http.get<PhotoInspection[]>(this.photosInspectionsApiUrl);
   }
 }
