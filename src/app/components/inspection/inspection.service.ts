@@ -65,6 +65,7 @@ export class InspectionService {
     const formData = new FormData();
     formData.append('file', file);
     return this.http.post<InspectionZipUploadResponse>(this.photoInspectionsImportApiUrl, formData);
+    return this.http.post<InspectionZipUploadResponse>(`${this.photosInspectionsApiUrl}/import`, formData);
   }
 
   private inspectorRequestWithFallback<T>(request: (baseUrl: string) => Observable<T>): Observable<T> {
