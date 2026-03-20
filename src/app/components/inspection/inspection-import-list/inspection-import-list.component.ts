@@ -17,6 +17,11 @@ import { ActivatedRoute } from '@angular/router';
 import { Inspection } from '../../../models/inspection.model';
 import { Inspector } from '../../../models/inspector.model';
 import { PhotoInspection } from '../../../models/photo-inspection.model';
+import {
+  FotoNaoProcessada,
+  FotoProcessada,
+  InspectionZipUploadResponse
+} from '../../../models/inspection-zip-upload-response.model';
 import { InspectionService } from '../inspection.service';
 import { AuthService } from '../../../auth/services/auth.service';
 
@@ -40,7 +45,7 @@ import { AuthService } from '../../../auth/services/auth.service';
   styleUrl: './inspection-import-list.component.scss'
 })
 export class InspectionImportListComponent implements AfterViewInit {
-  viewMode: 'inspections' | 'inspectors' | 'photos-inspections' = 'inspections';
+  viewMode: 'inspections' | 'inspectors' | 'photos-inspections' | 'inspection-upload' = 'inspections';
   readonly canManageInspectors: boolean;
   inspectionColumns: string[] = ['id', 'status', 'worder', 'client', 'name', 'city', 'duedate', 'actions'];
   inspectorColumns: string[] = ['id', 'nome', 'actions'];
@@ -51,8 +56,14 @@ export class InspectionImportListComponent implements AfterViewInit {
   photosInspectionsDataSource = new MatTableDataSource<PhotoInspection>([]);
 
   selectedFile?: File;
+  selectedZipFile?: File;
   isLoading = false;
   selectedInspectorId?: number;
+  uploadResult?: InspectionZipUploadResponse;
+  processedPhotosDataSource = new MatTableDataSource<FotoProcessada>([]);
+  unprocessedPhotosDataSource = new MatTableDataSource<FotoNaoProcessada>([]);
+  processedPhotosColumns: string[] = ['arquivo', 'inspectionId', 'substituida'];
+  unprocessedPhotosColumns: string[] = ['arquivo', 'motivo'];
 
   inspectionEditing?: Inspection;
   inspectionForInspectorAssign?: Inspection;
@@ -78,6 +89,10 @@ export class InspectionImportListComponent implements AfterViewInit {
 
     if (routeView === 'photos-inspections') {
       this.viewMode = 'photos-inspections';
+    }
+
+    if (routeView === 'inspection-upload') {
+      this.viewMode = 'inspection-upload';
     }
 
     this.dataSource.filterPredicate = (data: Inspection, filter: string) => {
@@ -112,6 +127,10 @@ export class InspectionImportListComponent implements AfterViewInit {
       return;
     }
 
+    if (this.viewMode === 'inspection-upload') {
+      return;
+    }
+
     this.loadPhotosInspections();
   }
 
@@ -137,6 +156,33 @@ export class InspectionImportListComponent implements AfterViewInit {
           this.loadInspections();
         },
         error: () => this.showMessage('Falha ao importar arquivo. Verifique o layout e tente novamente.')
+      });
+  }
+
+  onZipSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    this.selectedZipFile = input.files?.[0];
+  }
+
+  uploadInspectionZip(): void {
+    if (!this.selectedZipFile) {
+      this.showMessage('Selecione um arquivo .zip para upload.');
+      return;
+    }
+
+    this.isLoading = true;
+    this.inspectionService
+      .uploadInspectionZip(this.selectedZipFile)
+      .pipe(finalize(() => (this.isLoading = false)))
+      .subscribe({
+        next: (response) => {
+          this.uploadResult = response;
+          this.processedPhotosDataSource.data = response.fotosProcessadas || [];
+          this.unprocessedPhotosDataSource.data = response.fotosNaoProcessadas || [];
+          this.showMessage('Upload da inspeção concluído com sucesso.');
+          this.selectedZipFile = undefined;
+        },
+        error: () => this.showMessage('Falha ao enviar ZIP. Verifique o arquivo e tente novamente.')
       });
   }
 

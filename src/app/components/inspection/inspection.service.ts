@@ -4,6 +4,7 @@ import { catchError, Observable, throwError } from 'rxjs';
 import { Inspection } from '../../models/inspection.model';
 import { Inspector } from '../../models/inspector.model';
 import { PhotoInspection } from '../../models/photo-inspection.model';
+import { InspectionZipUploadResponse } from '../../models/inspection-zip-upload-response.model';
 import { environment } from '../../../environments/environment';
 
 @Injectable({
@@ -14,6 +15,7 @@ export class InspectionService {
   private readonly inspectorsApiUrl = `${environment.apiBaseUrl}/api/inspetores`;
   private readonly inspectorsApiUrlFallback = `${environment.apiBaseUrl}/api/inspectors`;
   private readonly photosInspectionsApiUrl = `${environment.apiBaseUrl}/api/fotosinspections`;
+  private readonly photoInspectionsImportApiUrl = `${environment.apiBaseUrl}/api/foto-inspections/import-zip`;
 
   constructor(private http: HttpClient) {}
 
@@ -57,6 +59,12 @@ export class InspectionService {
 
   listPhotosInspections(): Observable<PhotoInspection[]> {
     return this.http.get<PhotoInspection[]>(this.photosInspectionsApiUrl);
+  }
+
+  uploadInspectionZip(file: File): Observable<InspectionZipUploadResponse> {
+    const formData = new FormData();
+    formData.append('file', file);
+    return this.http.post<InspectionZipUploadResponse>(this.photoInspectionsImportApiUrl, formData);
   }
 
   private inspectorRequestWithFallback<T>(request: (baseUrl: string) => Observable<T>): Observable<T> {
