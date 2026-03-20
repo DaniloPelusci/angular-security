@@ -90,5 +90,11 @@ export const routes: Routes = [
     component: InspectionImportListComponent,
     canActivate: [AuthGuard],
     data: { roles: ['ROLE_ADMIN', 'ROLE_CORRETOR'], view: 'photos-inspections' }
+  },
+  {
+    path: 'inspection-upload',
+    component: InspectionImportListComponent,
+    canActivate: [AuthGuard],
+    data: { roles: ['ROLE_ADMIN', 'ROLE_CORRETOR'], view: 'inspection-upload' }
   }
 ];

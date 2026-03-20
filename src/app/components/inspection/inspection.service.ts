@@ -4,6 +4,7 @@ import { catchError, Observable, throwError } from 'rxjs';
 import { Inspection } from '../../models/inspection.model';
 import { Inspector } from '../../models/inspector.model';
 import { PhotoInspection } from '../../models/photo-inspection.model';
+import { InspectionZipUploadResponse } from '../../models/inspection-zip-upload-response.model';
 import { environment } from '../../../environments/environment';
 
 @Injectable({
@@ -57,6 +58,12 @@ export class InspectionService {
 
   listPhotosInspections(): Observable<PhotoInspection[]> {
     return this.http.get<PhotoInspection[]>(this.photosInspectionsApiUrl);
+  }
+
+  uploadInspectionZip(file: File): Observable<InspectionZipUploadResponse> {
+    const formData = new FormData();
+    formData.append('file', file);
+    return this.http.post<InspectionZipUploadResponse>(`${this.photosInspectionsApiUrl}/import`, formData);
   }
 
   private inspectorRequestWithFallback<T>(request: (baseUrl: string) => Observable<T>): Observable<T> {

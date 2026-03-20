@@ -69,3 +69,16 @@ table {
 .inspector-select {
   width: min(420px, 100%);
 }
+
+.upload-table {
+  margin-top: 16px;
+  padding: 12px;
+}
+
+.upload-table h3 {
+  margin: 0 0 10px;
+}
+
+.upload-table table {
+  min-width: 680px;
+}

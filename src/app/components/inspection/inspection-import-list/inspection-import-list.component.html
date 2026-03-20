@@ -2,6 +2,7 @@
   <h2 *ngIf="viewMode === 'inspections'">Gestão de inspeções</h2>
   <h2 *ngIf="viewMode === 'inspectors'">Cadastro de inspetor</h2>
   <h2 *ngIf="viewMode === 'photos-inspections'">Fotos de inspeções</h2>
+  <h2 *ngIf="viewMode === 'inspection-upload'">Upload de inspeção</h2>
 
   <div *ngIf="viewMode === 'inspections'" class="page-content">
     <div class="import-box mat-elevation-z2">
@@ -215,6 +216,67 @@
 
         <tr mat-header-row *matHeaderRowDef="photosInspectionColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: photosInspectionColumns"></tr>
+      </table>
+    </div>
+  </div>
+
+  <div *ngIf="viewMode === 'inspection-upload'" class="page-content">
+    <div class="import-box mat-elevation-z2">
+      <input type="file" accept=".zip" (change)="onZipSelected($event)" />
+
+      <button mat-raised-button color="primary" (click)="uploadInspectionZip()" [disabled]="isLoading">
+        <mat-icon>folder_zip</mat-icon>
+        Enviar ZIP
+      </button>
+
+      <span class="file-name" *ngIf="selectedZipFile">{{ selectedZipFile.name }}</span>
+    </div>
+
+    <div *ngIf="uploadResult" class="editor-box mat-elevation-z2">
+      <h3>Resumo do processamento</h3>
+      <p><strong>Total de arquivos:</strong> {{ uploadResult.totalArquivos }}</p>
+      <p><strong>Processadas:</strong> {{ uploadResult.processadas }}</p>
+      <p><strong>Não processadas:</strong> {{ uploadResult.naoProcessadas }}</p>
+    </div>
+
+    <div *ngIf="uploadResult" class="table-wrapper mat-elevation-z2 upload-table">
+      <h3>Fotos processadas</h3>
+      <table mat-table [dataSource]="processedPhotosDataSource">
+        <ng-container matColumnDef="arquivo">
+          <th mat-header-cell *matHeaderCellDef>Arquivo</th>
+          <td mat-cell *matCellDef="let row">{{ row.arquivo }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="inspectionId">
+          <th mat-header-cell *matHeaderCellDef>Inspection ID</th>
+          <td mat-cell *matCellDef="let row">{{ row.inspectionId }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="substituida">
+          <th mat-header-cell *matHeaderCellDef>Substituída</th>
+          <td mat-cell *matCellDef="let row">{{ row.substituida ? 'Sim' : 'Não' }}</td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="processedPhotosColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: processedPhotosColumns"></tr>
+      </table>
+    </div>
+
+    <div *ngIf="uploadResult" class="table-wrapper mat-elevation-z2 upload-table">
+      <h3>Fotos não processadas</h3>
+      <table mat-table [dataSource]="unprocessedPhotosDataSource">
+        <ng-container matColumnDef="arquivo">
+          <th mat-header-cell *matHeaderCellDef>Arquivo</th>
+          <td mat-cell *matCellDef="let row">{{ row.arquivo }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="motivo">
+          <th mat-header-cell *matHeaderCellDef>Motivo</th>
+          <td mat-cell *matCellDef="let row">{{ row.motivo }}</td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="unprocessedPhotosColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: unprocessedPhotosColumns"></tr>
       </table>
     </div>
   </div>

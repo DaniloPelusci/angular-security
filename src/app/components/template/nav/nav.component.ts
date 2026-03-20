@@ -36,6 +36,7 @@ export class NavComponent {
     { label: 'Inspeções', icon: 'fact_check', route: '/inspections', roles: ['ROLE_ADMIN', 'ROLE_CORRETOR'] },
     { label: 'Cadastro de inspetor', icon: 'badge', route: '/inspectors', roles: ['ROLE_ADMIN', 'ROLE_CORRETOR'] },
     { label: 'Fotos de inspeções', icon: 'photo_library', route: '/photos-inspections', roles: ['ROLE_ADMIN', 'ROLE_CORRETOR'] },
+    { label: 'Upload de inspeção', icon: 'folder_zip', route: '/inspection-upload', roles: ['ROLE_ADMIN', 'ROLE_CORRETOR'] },
     { label: 'Usuários', icon: 'people', route: '/users', roles: ['ROLE_ADMIN'] },
     { label: 'Cadastrar Usuário', icon: 'person_add', route: '/register', roles: ['ROLE_ADMIN'] }  ];
 
