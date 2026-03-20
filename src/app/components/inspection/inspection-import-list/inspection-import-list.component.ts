@@ -54,11 +54,14 @@ export class InspectionImportListComponent implements AfterViewInit {
   dataSource = new MatTableDataSource<Inspection>([]);
   inspectorsDataSource = new MatTableDataSource<Inspector>([]);
   photosInspectionsDataSource = new MatTableDataSource<PhotoInspection>([]);
+  allPhotosInspections: PhotoInspection[] = [];
 
   selectedFile?: File;
   selectedZipFile?: File;
   isLoading = false;
   selectedInspectorId?: number;
+  selectedPhotoInspectorId?: number;
+  selectedPhotoInspectionId?: number;
   uploadResult?: InspectionZipUploadResponse;
   processedPhotosDataSource = new MatTableDataSource<FotoProcessada>([]);
   unprocessedPhotosDataSource = new MatTableDataSource<FotoNaoProcessada>([]);
@@ -68,6 +71,8 @@ export class InspectionImportListComponent implements AfterViewInit {
   inspectionEditing?: Inspection;
   inspectionForInspectorAssign?: Inspection;
   inspectorEditing?: Inspector;
+  photoEditing?: PhotoInspection;
+  selectedPhotoFileForUpdate?: File;
 
   inspectorForm: Inspector = { nome: '' };
 
@@ -131,6 +136,9 @@ export class InspectionImportListComponent implements AfterViewInit {
       return;
     }
 
+    this.photosInspectionColumns = ['id', 'inspectionId', 'photoPreview', 'descricao', 'createdAt', 'actions'];
+    this.loadInspections();
+    this.loadInspectors();
     this.loadPhotosInspections();
   }
 
@@ -340,6 +348,81 @@ export class InspectionImportListComponent implements AfterViewInit {
     this.inspectorsDataSource.filter = filterValue.trim().toLowerCase();
   }
 
+  get inspectionsForSelectedInspector(): Inspection[] {
+    if (!this.selectedPhotoInspectorId) {
+      return this.dataSource.data;
+    }
+
+    return this.dataSource.data.filter((inspection) => inspection.inspetorId === this.selectedPhotoInspectorId);
+  }
+
+  get filteredPhotosInspections(): PhotoInspection[] {
+    return this.photosInspectionsDataSource.data;
+  }
+
+  onPhotoInspectorFilterChange(): void {
+    this.selectedPhotoInspectionId = undefined;
+    this.applyPhotoFilter();
+  }
+
+  onPhotoInspectionFilterChange(): void {
+    this.applyPhotoFilter();
+  }
+
+  onPhotoFileForUpdateSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    this.selectedPhotoFileForUpdate = input.files?.[0];
+  }
+
+  startEditPhoto(row: PhotoInspection): void {
+    this.photoEditing = { ...row };
+    this.selectedPhotoFileForUpdate = undefined;
+  }
+
+  cancelEditPhoto(): void {
+    this.photoEditing = undefined;
+    this.selectedPhotoFileForUpdate = undefined;
+  }
+
+  savePhotoChanges(): void {
+    if (!this.photoEditing?.id || !this.selectedPhotoFileForUpdate) {
+      this.showMessage('Selecione uma foto para substituir.');
+      return;
+    }
+
+    this.inspectionService
+      .updatePhotoInspection(this.photoEditing.id, this.selectedPhotoFileForUpdate, this.photoEditing.descricao || '')
+      .subscribe({
+        next: () => {
+          this.showMessage('Foto atualizada com sucesso.');
+          this.cancelEditPhoto();
+          this.loadPhotosInspections();
+        },
+        error: () => this.showMessage('Não foi possível atualizar a foto.')
+      });
+  }
+
+  deletePhoto(row: PhotoInspection): void {
+    if (!confirm(`Deseja excluir a foto #${row.id}?`)) {
+      return;
+    }
+
+    this.inspectionService.deletePhotoInspection(row.id).subscribe({
+      next: () => {
+        this.showMessage('Foto excluída com sucesso.');
+        this.loadPhotosInspections();
+      },
+      error: () => this.showMessage('Não foi possível excluir a foto.')
+    });
+  }
+
+  getPhotoPreview(photo: PhotoInspection): string | null {
+    if (photo.foto) {
+      return `data:image/jpeg;base64,${photo.foto}`;
+    }
+
+    return photo.photoUrl || null;
+  }
 
   loadPhotosInspections(): void {
     this.isLoading = true;
@@ -348,7 +431,8 @@ export class InspectionImportListComponent implements AfterViewInit {
       .pipe(finalize(() => (this.isLoading = false)))
       .subscribe({
         next: (photosInspections) => {
-          this.photosInspectionsDataSource.data = photosInspections;
+          this.allPhotosInspections = photosInspections;
+          this.applyPhotoFilter();
         },
         error: () => this.showMessage('Não foi possível carregar as fotos de inspeções.')
       });
@@ -357,6 +441,22 @@ export class InspectionImportListComponent implements AfterViewInit {
   applyPhotosInspectionsFilter(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value;
     this.photosInspectionsDataSource.filter = filterValue.trim().toLowerCase();
+  }
+
+  private applyPhotoFilter(): void {
+    const filtered = this.allPhotosInspections.filter((photo) => {
+      if (this.selectedPhotoInspectionId) {
+        return photo.inspectionId === this.selectedPhotoInspectionId;
+      }
+
+      if (this.selectedPhotoInspectorId) {
+        return this.inspectionsForSelectedInspector.some((inspection) => inspection.id === photo.inspectionId);
+      }
+
+      return true;
+    });
+
+    this.photosInspectionsDataSource.data = filtered;
   }
 
   private resetInspectorForm(): void {

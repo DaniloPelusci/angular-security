@@ -82,3 +82,17 @@ table {
 .upload-table table {
   min-width: 680px;
 }
+
+.photo-filters-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.inspection-photo-preview {
+  width: 140px;
+  height: 90px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}

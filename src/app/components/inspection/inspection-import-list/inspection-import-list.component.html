@@ -182,6 +182,28 @@
     </div>
   </div>
   <div *ngIf="viewMode === 'photos-inspections'" class="page-content">
+    <div class="photo-filters-row">
+      <mat-form-field appearance="outline" class="filter-field">
+        <mat-label>Filtrar por inspetor</mat-label>
+        <mat-select [(ngModel)]="selectedPhotoInspectorId" (selectionChange)="onPhotoInspectorFilterChange()">
+          <mat-option [value]="undefined">Todos</mat-option>
+          <mat-option *ngFor="let inspector of inspectorsDataSource.data" [value]="inspector.id">
+            {{ inspector.nome }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="filter-field">
+        <mat-label>Filtrar por inspeção</mat-label>
+        <mat-select [(ngModel)]="selectedPhotoInspectionId" (selectionChange)="onPhotoInspectionFilterChange()">
+          <mat-option [value]="undefined">Todas</mat-option>
+          <mat-option *ngFor="let inspection of inspectionsForSelectedInspector" [value]="inspection.id">
+            #{{ inspection.id }} - {{ inspection.client || inspection.name || 'Sem cliente' }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
     <mat-form-field appearance="outline" class="filter-field">
       <mat-label>Buscar fotos de inspeção</mat-label>
       <input matInput (keyup)="applyPhotosInspectionsFilter($event)" placeholder="Digite ID da inspeção, URL ou descrição" />
@@ -199,9 +221,12 @@
           <td mat-cell *matCellDef="let row">{{ row.inspectionId || '-' }}</td>
         </ng-container>
 
-        <ng-container matColumnDef="photoUrl">
-          <th mat-header-cell *matHeaderCellDef>URL da foto</th>
-          <td mat-cell *matCellDef="let row">{{ row.photoUrl || '-' }}</td>
+        <ng-container matColumnDef="photoPreview">
+          <th mat-header-cell *matHeaderCellDef>Foto</th>
+          <td mat-cell *matCellDef="let row">
+            <img *ngIf="getPhotoPreview(row)" [src]="getPhotoPreview(row)!" alt="Foto da inspeção" class="inspection-photo-preview" />
+            <span *ngIf="!getPhotoPreview(row)">-</span>
+          </td>
         </ng-container>
 
         <ng-container matColumnDef="descricao">
@@ -214,9 +239,34 @@
           <td mat-cell *matCellDef="let row">{{ row.createdAt || '-' }}</td>
         </ng-container>
 
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Ações</th>
+          <td mat-cell *matCellDef="let row">
+            <div class="actions-cell">
+              <button mat-stroked-button color="primary" (click)="startEditPhoto(row)">Alterar foto</button>
+              <button mat-stroked-button color="warn" (click)="deletePhoto(row)">Excluir</button>
+            </div>
+          </td>
+        </ng-container>
+
         <tr mat-header-row *matHeaderRowDef="photosInspectionColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: photosInspectionColumns"></tr>
       </table>
+    </div>
+
+    <div class="editor-box mat-elevation-z2" *ngIf="photoEditing">
+      <h3>Alterar foto #{{ photoEditing.id }}</h3>
+      <div class="form-grid one-column">
+        <mat-form-field appearance="outline">
+          <mat-label>Descrição</mat-label>
+          <input matInput [(ngModel)]="photoEditing.descricao" />
+        </mat-form-field>
+        <input type="file" accept="image/*" (change)="onPhotoFileForUpdateSelected($event)" />
+      </div>
+      <div class="actions-row">
+        <button mat-raised-button color="primary" (click)="savePhotoChanges()">Salvar</button>
+        <button mat-stroked-button (click)="cancelEditPhoto()">Cancelar</button>
+      </div>
     </div>
   </div>
 
