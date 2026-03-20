@@ -14,7 +14,7 @@ export class InspectionService {
   private readonly inspectionsApiUrl = `${environment.apiBaseUrl}/api/inspections`;
   private readonly inspectorsApiUrl = `${environment.apiBaseUrl}/api/inspetores`;
   private readonly inspectorsApiUrlFallback = `${environment.apiBaseUrl}/api/inspectors`;
-  private readonly photosInspectionsApiUrl = `${environment.apiBaseUrl}/api/fotosinspections`;
+  private readonly photosInspectionsApiUrl = `${environment.apiBaseUrl}/api/foto-inspections`;
   private readonly photoInspectionsImportApiUrl = `${environment.apiBaseUrl}/api/foto-inspections/import-zip`;
 
   constructor(private http: HttpClient) {}
@@ -65,7 +65,6 @@ export class InspectionService {
     const formData = new FormData();
     formData.append('file', file);
     return this.http.post<InspectionZipUploadResponse>(this.photoInspectionsImportApiUrl, formData);
-    return this.http.post<InspectionZipUploadResponse>(`${this.photosInspectionsApiUrl}/import`, formData);
   }
 
   private inspectorRequestWithFallback<T>(request: (baseUrl: string) => Observable<T>): Observable<T> {
