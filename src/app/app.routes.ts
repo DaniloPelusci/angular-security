@@ -15,6 +15,7 @@ import {SolicitarDocumentoComponent} from './components/lead/solicitar-documento
 import {
   InspectionImportListComponent
 } from './components/inspection/inspection-import-list/inspection-import-list.component';
+import { InspectionSearchComponent } from './components/inspection/inspection-search/inspection-search.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -96,5 +97,17 @@ export const routes: Routes = [
     component: InspectionImportListComponent,
     canActivate: [AuthGuard],
     data: { roles: ['ROLE_ADMIN', 'ROLE_CORRETOR'], view: 'inspection-upload' }
+  },
+  {
+    path: 'pesquisa/inspetor-worder',
+    component: InspectionSearchComponent,
+    canActivate: [AuthGuard],
+    data: { roles: ['ROLE_ADMIN', 'ROLE_CORRETOR'], mode: 'worder' }
+  },
+  {
+    path: 'pesquisa/atype',
+    component: InspectionSearchComponent,
+    canActivate: [AuthGuard],
+    data: { roles: ['ROLE_ADMIN', 'ROLE_CORRETOR'], mode: 'otype' }
   }
 ];

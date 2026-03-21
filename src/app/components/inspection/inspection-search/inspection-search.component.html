@@ -1,0 +1,118 @@
+<section class="page-wrapper">
+  <h2>Pesquisa de inspeções</h2>
+
+  <div class="search-box mat-elevation-z2">
+    <mat-form-field appearance="outline">
+      <mat-label>Inspetor</mat-label>
+      <mat-select [(ngModel)]="inspectorId">
+        <mat-option [value]="undefined">Todos</mat-option>
+        <mat-option *ngFor="let inspector of inspectors" [value]="inspector.id">
+          {{ inspector.nome }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>{{ searchMode === 'worder' ? 'Worder' : 'Otype' }}</mat-label>
+      <input
+        matInput
+        [(ngModel)]="searchValue"
+        [placeholder]="searchMode === 'worder' ? 'Digite o worder' : 'Digite o otype'"
+        (keydown)="onKeydownSearch($event)"
+      />
+    </mat-form-field>
+
+    <div class="actions-row">
+      <button mat-raised-button color="primary" (click)="searchByInspectorAndWorder()" [disabled]="isLoading">
+        Pesquisa inspetor/worder
+      </button>
+      <button mat-raised-button color="accent" (click)="searchByInspectorAndOtype()" [disabled]="isLoading">
+        Pesquisa/atype
+      </button>
+    </div>
+  </div>
+
+  <div class="table-wrapper mat-elevation-z2">
+    <h3>Inspeções encontradas</h3>
+    <table mat-table [dataSource]="inspectionsDataSource">
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef>ID</th>
+        <td mat-cell *matCellDef="let row">{{ row.id }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef>Status</th>
+        <td mat-cell *matCellDef="let row">{{ row.status || '-' }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="worder">
+        <th mat-header-cell *matHeaderCellDef>Worder</th>
+        <td mat-cell *matCellDef="let row">{{ row.worder || '-' }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="otype">
+        <th mat-header-cell *matHeaderCellDef>Otype</th>
+        <td mat-cell *matCellDef="let row">{{ row.otype || '-' }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="client">
+        <th mat-header-cell *matHeaderCellDef>Cliente</th>
+        <td mat-cell *matCellDef="let row">{{ row.client || '-' }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef>Nome</th>
+        <td mat-cell *matCellDef="let row">{{ row.name || '-' }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="city">
+        <th mat-header-cell *matHeaderCellDef>Cidade</th>
+        <td mat-cell *matCellDef="let row">{{ row.city || '-' }}</td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="inspectionColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: inspectionColumns"></tr>
+    </table>
+  </div>
+
+  <div class="table-wrapper mat-elevation-z2">
+    <h3>Lista de fotos</h3>
+    <table mat-table [dataSource]="photosDataSource">
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef>ID</th>
+        <td mat-cell *matCellDef="let row">{{ row.id }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="inspectionId">
+        <th mat-header-cell *matHeaderCellDef>Inspeção</th>
+        <td mat-cell *matCellDef="let row">{{ row.inspectionId || '-' }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="descricao">
+        <th mat-header-cell *matHeaderCellDef>Descrição</th>
+        <td mat-cell *matCellDef="let row">{{ row.descricao || '-' }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="preview">
+        <th mat-header-cell *matHeaderCellDef>Visualizar</th>
+        <td mat-cell *matCellDef="let row">
+          <button mat-stroked-button color="primary" (click)="openPhotoPopup(row)">
+            Ver foto
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="photoColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: photoColumns"></tr>
+    </table>
+  </div>
+
+  <div class="photo-modal" *ngIf="selectedPhotoPreview" (click)="closePhotoPopup()">
+    <div class="photo-modal-content" (click)="$event.stopPropagation()">
+      <button mat-icon-button class="close-button" (click)="closePhotoPopup()" aria-label="Fechar popup">
+        <mat-icon>close</mat-icon>
+      </button>
+      <img [src]="selectedPhotoPreview" alt="Foto da inspeção" />
+    </div>
+  </div>
+</section>

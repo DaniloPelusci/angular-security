@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { catchError, Observable, throwError } from 'rxjs';
 import { Inspection } from '../../models/inspection.model';
 import { Inspector } from '../../models/inspector.model';
@@ -21,6 +21,34 @@ export class InspectionService {
 
   listInspections(): Observable<Inspection[]> {
     return this.http.get<Inspection[]>(this.inspectionsApiUrl);
+  }
+
+  listInspectionsByWorder(inspetorId?: number, worder?: string): Observable<Inspection[]> {
+    let params = new HttpParams();
+
+    if (inspetorId) {
+      params = params.set('inspetorId', String(inspetorId));
+    }
+
+    if (worder?.trim()) {
+      params = params.set('worder', worder.trim());
+    }
+
+    return this.http.get<Inspection[]>(`${this.inspectionsApiUrl}/por-worder`, { params });
+  }
+
+  listInspectionsByOtype(inspetorId?: number, otype?: string): Observable<Inspection[]> {
+    let params = new HttpParams();
+
+    if (inspetorId) {
+      params = params.set('inspetorId', String(inspetorId));
+    }
+
+    if (otype?.trim()) {
+      params = params.set('otype', otype.trim());
+    }
+
+    return this.http.get<Inspection[]>(`${this.inspectionsApiUrl}/por-otype`, { params });
   }
 
   uploadExcel(file: File): Observable<void> {
@@ -59,6 +87,10 @@ export class InspectionService {
 
   listPhotosInspections(): Observable<PhotoInspection[]> {
     return this.http.get<PhotoInspection[]>(this.photosInspectionsApiUrl);
+  }
+
+  listPhotosByInspections(inspections: Inspection[]): Observable<PhotoInspection[]> {
+    return this.http.post<PhotoInspection[]>(`${this.photosInspectionsApiUrl}/by-inspections`, inspections);
   }
 
   updatePhotoInspection(id: number, photoFile: File, descricao?: string): Observable<PhotoInspection> {

@@ -1,0 +1,66 @@
+.page-wrapper {
+  padding: 16px;
+}
+
+.search-box,
+.table-wrapper {
+  background: #fff;
+  border-radius: 8px;
+  padding: 12px;
+  margin-top: 16px;
+}
+
+.search-box {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+
+.actions-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+mat-form-field {
+  min-width: 260px;
+}
+
+table {
+  width: 100%;
+  min-width: 900px;
+}
+
+.photo-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.72);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1200;
+}
+
+.photo-modal-content {
+  position: relative;
+  background: #fff;
+  border-radius: 10px;
+  max-width: min(90vw, 980px);
+  max-height: 90vh;
+  padding: 12px;
+}
+
+.photo-modal-content img {
+  width: 100%;
+  max-height: calc(90vh - 24px);
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+.close-button {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  background-color: rgba(255, 255, 255, 0.8);
+}
