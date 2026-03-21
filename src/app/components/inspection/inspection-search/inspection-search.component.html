@@ -12,7 +12,7 @@
       </mat-select>
     </mat-form-field>
 
-    <mat-form-field appearance="outline">
+    <mat-form-field appearance="outline" *ngIf="searchMode === 'worder'; else otypeField">
       <mat-label>{{ searchLabel }}</mat-label>
       <input
         matInput
@@ -21,6 +21,25 @@
         (keydown)="onKeydownSearch($event)"
       />
     </mat-form-field>
+    <ng-template #otypeField>
+      <mat-form-field appearance="outline">
+        <mat-label>{{ searchLabel }}</mat-label>
+        <input
+          matInput
+          [(ngModel)]="searchValue"
+          [placeholder]="searchPlaceholder"
+          [matAutocomplete]="otypeAutocomplete"
+          [disabled]="isLoadingOtypes"
+          (keydown)="onKeydownSearch($event)"
+        />
+        <mat-hint *ngIf="isLoadingOtypes">Carregando OTypes...</mat-hint>
+        <mat-autocomplete #otypeAutocomplete="matAutocomplete">
+          <mat-option *ngFor="let otype of filteredOtypes" [value]="otype">
+            {{ otype }}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+    </ng-template>
 
     <div class="actions-row">
       <button mat-raised-button color="primary" (click)="search()" [disabled]="isLoading">
