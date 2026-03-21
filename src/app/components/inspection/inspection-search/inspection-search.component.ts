@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -7,6 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { ActivatedRoute } from '@angular/router';
 import { finalize } from 'rxjs';
@@ -28,12 +29,15 @@ import { InspectionService } from '../inspection.service';
     MatInputModule,
     MatSelectModule,
     MatSnackBarModule,
+    MatPaginatorModule,
     MatTableModule
   ],
   templateUrl: './inspection-search.component.html',
   styleUrl: './inspection-search.component.scss'
 })
-export class InspectionSearchComponent implements OnInit {
+export class InspectionSearchComponent implements OnInit, AfterViewInit {
+  @ViewChild(MatPaginator) paginator?: MatPaginator;
+
   searchMode: 'worder' | 'otype' = 'worder';
 
   inspectorId?: number;
@@ -48,6 +52,9 @@ export class InspectionSearchComponent implements OnInit {
   selectedInspectionId?: number;
   selectedInspection?: Inspection;
   selectedPhotoPreview?: string;
+  photoEditing?: PhotoInspection;
+  isSavingPhoto = false;
+  readonly pageSizeOptions = [5, 10, 15, 20];
 
   readonly inspectionColumns = ['id', 'status', 'worder', 'otype', 'client', 'name', 'city', 'actions'];
   readonly photoColumns = ['id', 'inspectionId', 'descricao', 'preview'];
@@ -97,6 +104,10 @@ export class InspectionSearchComponent implements OnInit {
     this.loadInspectors();
   }
 
+  ngAfterViewInit(): void {
+    this.inspectionsDataSource.paginator = this.paginator ?? null;
+  }
+
   get searchTitle(): string {
     return this.searchMode === 'worder' ? 'Pesquisa por Worder' : 'Pesquisa por Otype';
   }
@@ -136,6 +147,7 @@ export class InspectionSearchComponent implements OnInit {
 
     this.selectedInspectionId = inspection.id;
     this.selectedInspection = inspection;
+    this.photoEditing = undefined;
     this.photosDataSource.data = [];
     this.isLoadingPhotos = true;
 
@@ -166,6 +178,35 @@ export class InspectionSearchComponent implements OnInit {
     this.selectedPhotoPreview = undefined;
   }
 
+  startEditPhoto(photo: PhotoInspection): void {
+    this.photoEditing = { ...photo };
+  }
+
+  cancelEditPhoto(): void {
+    this.photoEditing = undefined;
+  }
+
+  savePhotoMetadata(): void {
+    if (!this.photoEditing) {
+      return;
+    }
+
+    this.isSavingPhoto = true;
+    this.inspectionService
+      .updatePhotoInspectionMetadata(this.photoEditing)
+      .pipe(finalize(() => (this.isSavingPhoto = false)))
+      .subscribe({
+        next: (updatedPhoto) => {
+          this.photosDataSource.data = this.photosDataSource.data.map((photo) =>
+            photo.id === updatedPhoto.id ? { ...photo, ...updatedPhoto } : photo
+          );
+          this.photoEditing = undefined;
+          this.showMessage('Dados da foto atualizados com sucesso.');
+        },
+        error: () => this.showMessage('Não foi possível atualizar os dados da foto.')
+      });
+  }
+
   getPhotoPreview(photo: PhotoInspection): string | null {
     if (photo.foto) {
       return `data:image/jpeg;base64,${photo.foto}`;
@@ -187,6 +228,7 @@ export class InspectionSearchComponent implements OnInit {
     this.isLoading = true;
     this.selectedInspectionId = undefined;
     this.selectedInspection = undefined;
+    this.photoEditing = undefined;
     this.photosDataSource.data = [];
 
     const request$ = this.searchMode === 'worder'
@@ -198,6 +240,9 @@ export class InspectionSearchComponent implements OnInit {
       .subscribe({
         next: (inspections) => {
           this.inspectionsDataSource.data = inspections;
+          if (this.paginator) {
+            this.paginator.firstPage();
+          }
         },
         error: () => {
           this.inspectionsDataSource.data = [];

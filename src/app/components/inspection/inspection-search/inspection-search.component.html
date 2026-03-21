@@ -29,6 +29,87 @@
     </div>
   </div>
 
+  <div class="inspection-details mat-elevation-z2" *ngIf="selectedInspection">
+    <h3>Dados completos da inspeção</h3>
+
+    <div class="details-grid">
+      <div class="detail-item" *ngFor="let field of inspectionDetailsFields">
+        <span class="detail-label">{{ field.label }}</span>
+        <span class="detail-value">{{ getInspectionFieldValue(selectedInspection, field.key) }}</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="table-wrapper mat-elevation-z2">
+    <h3>Lista de fotos</h3>
+
+    <p class="helper-text" *ngIf="!selectedInspectionId">
+      Selecione uma inspeção e clique em Visualizar para carregar as fotos.
+    </p>
+    <p class="helper-text" *ngIf="isLoadingPhotos">
+      Carregando fotos da inspeção selecionada...
+    </p>
+
+    <table mat-table [dataSource]="photosDataSource">
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef>ID</th>
+        <td mat-cell *matCellDef="let row">{{ row.id }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="inspectionId">
+        <th mat-header-cell *matHeaderCellDef>Inspeção</th>
+        <td mat-cell *matCellDef="let row">{{ row.inspectionId || '-' }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="descricao">
+        <th mat-header-cell *matHeaderCellDef>Descrição</th>
+        <td mat-cell *matCellDef="let row">{{ row.descricao || '-' }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="preview">
+        <th mat-header-cell *matHeaderCellDef>Visualizar</th>
+        <td mat-cell *matCellDef="let row">
+          <div class="photo-actions">
+            <button mat-stroked-button color="primary" (click)="openPhotoPopup(row)">
+              Ver foto
+            </button>
+            <button mat-stroked-button (click)="startEditPhoto(row)">
+              Editar
+            </button>
+          </div>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="photoColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: photoColumns"></tr>
+    </table>
+  </div>
+
+  <div class="photo-editor mat-elevation-z2" *ngIf="photoEditing">
+    <h3>Editar metadados da foto #{{ photoEditing.id }}</h3>
+
+    <div class="photo-editor-fields">
+      <mat-form-field appearance="outline">
+        <mat-label>Descrição</mat-label>
+        <input matInput [(ngModel)]="photoEditing.descricao" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>URL da foto</mat-label>
+        <input matInput [(ngModel)]="photoEditing.photoUrl" />
+      </mat-form-field>
+    </div>
+
+    <div class="actions-row">
+      <button mat-raised-button color="primary" (click)="savePhotoMetadata()" [disabled]="isSavingPhoto">
+        Salvar
+      </button>
+      <button mat-stroked-button (click)="cancelEditPhoto()" [disabled]="isSavingPhoto">
+        Cancelar
+      </button>
+    </div>
+  </div>
+
   <div class="table-wrapper mat-elevation-z2">
     <h3>Inspeções encontradas</h3>
     <p class="helper-text">Clique em Visualizar para carregar os dados completos e as fotos da inspeção.</p>
@@ -85,57 +166,8 @@
         [class.row-selected]="isInspectionSelected(row)"
       ></tr>
     </table>
-  </div>
 
-  <div class="inspection-details mat-elevation-z2" *ngIf="selectedInspection">
-    <h3>Dados completos da inspeção</h3>
-
-    <div class="details-grid">
-      <div class="detail-item" *ngFor="let field of inspectionDetailsFields">
-        <span class="detail-label">{{ field.label }}</span>
-        <span class="detail-value">{{ getInspectionFieldValue(selectedInspection, field.key) }}</span>
-      </div>
-    </div>
-  </div>
-
-  <div class="table-wrapper mat-elevation-z2">
-    <h3>Lista de fotos</h3>
-
-    <p class="helper-text" *ngIf="!selectedInspectionId">
-      Selecione uma inspeção e clique em Visualizar para carregar as fotos.
-    </p>
-    <p class="helper-text" *ngIf="isLoadingPhotos">
-      Carregando fotos da inspeção selecionada...
-    </p>
-
-    <table mat-table [dataSource]="photosDataSource">
-      <ng-container matColumnDef="id">
-        <th mat-header-cell *matHeaderCellDef>ID</th>
-        <td mat-cell *matCellDef="let row">{{ row.id }}</td>
-      </ng-container>
-
-      <ng-container matColumnDef="inspectionId">
-        <th mat-header-cell *matHeaderCellDef>Inspeção</th>
-        <td mat-cell *matCellDef="let row">{{ row.inspectionId || '-' }}</td>
-      </ng-container>
-
-      <ng-container matColumnDef="descricao">
-        <th mat-header-cell *matHeaderCellDef>Descrição</th>
-        <td mat-cell *matCellDef="let row">{{ row.descricao || '-' }}</td>
-      </ng-container>
-
-      <ng-container matColumnDef="preview">
-        <th mat-header-cell *matHeaderCellDef>Visualizar</th>
-        <td mat-cell *matCellDef="let row">
-          <button mat-stroked-button color="primary" (click)="openPhotoPopup(row)">
-            Ver foto
-          </button>
-        </td>
-      </ng-container>
-
-      <tr mat-header-row *matHeaderRowDef="photoColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: photoColumns"></tr>
-    </table>
+    <mat-paginator [pageSize]="10" [pageSizeOptions]="pageSizeOptions" showFirstLastButtons></mat-paginator>
   </div>
 
   <div class="photo-modal" *ngIf="selectedPhotoPreview" (click)="closePhotoPopup()">
