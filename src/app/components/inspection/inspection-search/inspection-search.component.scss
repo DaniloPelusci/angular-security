@@ -4,7 +4,8 @@
 
 .search-box,
 .table-wrapper,
-.inspection-details {
+.inspection-details,
+.photo-editor {
   background: #fff;
   border-radius: 8px;
   padding: 12px;
@@ -72,6 +73,18 @@ table {
 .detail-value {
   font-size: 14px;
   color: #222;
+}
+
+.photo-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.photo-editor-fields {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 12px;
 }
 
 .photo-modal {

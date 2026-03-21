@@ -104,6 +104,13 @@ export class InspectionService {
     return this.http.put<PhotoInspection>(`${this.photosInspectionsApiUrl}/${id}`, formData);
   }
 
+  updatePhotoInspectionMetadata(photo: PhotoInspection): Observable<PhotoInspection> {
+    return this.http.put<PhotoInspection>(`${this.photosInspectionsApiUrl}/${photo.id}`, {
+      descricao: photo.descricao ?? null,
+      photoUrl: photo.photoUrl ?? null
+    });
+  }
+
   deletePhotoInspection(id: number): Observable<void> {
     return this.http.delete<void>(`${this.photosInspectionsApiUrl}/${id}`);
   }
