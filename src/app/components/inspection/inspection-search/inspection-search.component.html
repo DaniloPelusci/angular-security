@@ -1,5 +1,5 @@
 <section class="page-wrapper">
-  <h2>Pesquisa de inspeções</h2>
+  <h2>{{ searchTitle }}</h2>
 
   <div class="search-box mat-elevation-z2">
     <mat-form-field appearance="outline">
@@ -13,27 +13,26 @@
     </mat-form-field>
 
     <mat-form-field appearance="outline">
-      <mat-label>{{ searchMode === 'worder' ? 'Worder' : 'Otype' }}</mat-label>
+      <mat-label>{{ searchLabel }}</mat-label>
       <input
         matInput
         [(ngModel)]="searchValue"
-        [placeholder]="searchMode === 'worder' ? 'Digite o worder' : 'Digite o otype'"
+        [placeholder]="searchPlaceholder"
         (keydown)="onKeydownSearch($event)"
       />
     </mat-form-field>
 
     <div class="actions-row">
-      <button mat-raised-button color="primary" (click)="searchByInspectorAndWorder()" [disabled]="isLoading">
-        Pesquisa inspetor/worder
-      </button>
-      <button mat-raised-button color="accent" (click)="searchByInspectorAndOtype()" [disabled]="isLoading">
-        Pesquisa/atype
+      <button mat-raised-button color="primary" (click)="search()" [disabled]="isLoading">
+        Pesquisar
       </button>
     </div>
   </div>
 
   <div class="table-wrapper mat-elevation-z2">
     <h3>Inspeções encontradas</h3>
+    <p class="helper-text">Clique em uma inspeção para carregar as fotos relacionadas.</p>
+
     <table mat-table [dataSource]="inspectionsDataSource">
       <ng-container matColumnDef="id">
         <th mat-header-cell *matHeaderCellDef>ID</th>
@@ -71,12 +70,25 @@
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="inspectionColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: inspectionColumns"></tr>
+      <tr
+        mat-row
+        *matRowDef="let row; columns: inspectionColumns"
+        (click)="selectInspection(row)"
+        [class.row-selected]="isInspectionSelected(row)"
+      ></tr>
     </table>
   </div>
 
   <div class="table-wrapper mat-elevation-z2">
     <h3>Lista de fotos</h3>
+
+    <p class="helper-text" *ngIf="!selectedInspectionId">
+      Selecione uma inspeção para visualizar as fotos.
+    </p>
+    <p class="helper-text" *ngIf="isLoadingPhotos">
+      Carregando fotos da inspeção selecionada...
+    </p>
+
     <table mat-table [dataSource]="photosDataSource">
       <ng-container matColumnDef="id">
         <th mat-header-cell *matHeaderCellDef>ID</th>

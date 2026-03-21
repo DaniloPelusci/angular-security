@@ -39,11 +39,13 @@ export class InspectionSearchComponent implements OnInit {
   inspectorId?: number;
   searchValue = '';
   isLoading = false;
+  isLoadingPhotos = false;
 
   inspectors: Inspector[] = [];
   inspectionsDataSource = new MatTableDataSource<Inspection>([]);
   photosDataSource = new MatTableDataSource<PhotoInspection>([]);
 
+  selectedInspectionId?: number;
   selectedPhotoPreview?: string;
 
   readonly inspectionColumns = ['id', 'status', 'worder', 'otype', 'client', 'name', 'city'];
@@ -64,6 +66,18 @@ export class InspectionSearchComponent implements OnInit {
     this.loadInspectors();
   }
 
+  get searchTitle(): string {
+    return this.searchMode === 'worder' ? 'Pesquisa por Worder' : 'Pesquisa por Otype';
+  }
+
+  get searchLabel(): string {
+    return this.searchMode === 'worder' ? 'Worder' : 'Otype';
+  }
+
+  get searchPlaceholder(): string {
+    return this.searchMode === 'worder' ? 'Digite o worder' : 'Digite o otype';
+  }
+
   loadInspectors(): void {
     this.inspectionService.listInspectors().subscribe({
       next: (inspectors) => {
@@ -73,13 +87,7 @@ export class InspectionSearchComponent implements OnInit {
     });
   }
 
-  searchByInspectorAndWorder(): void {
-    this.searchMode = 'worder';
-    this.searchInspections();
-  }
-
-  searchByInspectorAndOtype(): void {
-    this.searchMode = 'otype';
+  search(): void {
     this.searchInspections();
   }
 
@@ -87,6 +95,29 @@ export class InspectionSearchComponent implements OnInit {
     if (event.key === 'Enter') {
       this.searchInspections();
     }
+  }
+
+  selectInspection(inspection: Inspection): void {
+    if (!inspection.id) {
+      this.showMessage('Inspeção inválida para carregar fotos.');
+      return;
+    }
+
+    this.selectedInspectionId = inspection.id;
+    this.photosDataSource.data = [];
+    this.isLoadingPhotos = true;
+
+    this.inspectionService.listPhotosByInspections([inspection]).pipe(
+      finalize(() => (this.isLoadingPhotos = false))
+    ).subscribe({
+      next: (photos) => {
+        this.photosDataSource.data = photos;
+      },
+      error: () => {
+        this.photosDataSource.data = [];
+        this.showMessage('Não foi possível carregar as fotos da inspeção selecionada.');
+      }
+    });
   }
 
   openPhotoPopup(photo: PhotoInspection): void {
@@ -111,8 +142,14 @@ export class InspectionSearchComponent implements OnInit {
     return photo.photoUrl || null;
   }
 
+  isInspectionSelected(inspection: Inspection): boolean {
+    return Boolean(inspection.id && inspection.id === this.selectedInspectionId);
+  }
+
   private searchInspections(): void {
     this.isLoading = true;
+    this.selectedInspectionId = undefined;
+    this.photosDataSource.data = [];
 
     const request$ = this.searchMode === 'worder'
       ? this.inspectionService.listInspectionsByWorder(this.inspectorId, this.searchValue)
@@ -123,7 +160,6 @@ export class InspectionSearchComponent implements OnInit {
       .subscribe({
         next: (inspections) => {
           this.inspectionsDataSource.data = inspections;
-          this.loadPhotosByInspections(inspections);
         },
         error: () => {
           this.inspectionsDataSource.data = [];
@@ -131,23 +167,6 @@ export class InspectionSearchComponent implements OnInit {
           this.showMessage('Não foi possível pesquisar as inspeções.');
         }
       });
-  }
-
-  private loadPhotosByInspections(inspections: Inspection[]): void {
-    if (!inspections.length) {
-      this.photosDataSource.data = [];
-      return;
-    }
-
-    this.inspectionService.listPhotosByInspections(inspections).subscribe({
-      next: (photos) => {
-        this.photosDataSource.data = photos;
-      },
-      error: () => {
-        this.photosDataSource.data = [];
-        this.showMessage('Não foi possível carregar as fotos para as inspeções encontradas.');
-      }
-    });
   }
 
   private showMessage(message: string): void {

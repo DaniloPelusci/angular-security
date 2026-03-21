@@ -106,6 +106,12 @@ export const routes: Routes = [
   },
   {
     path: 'pesquisa/atype',
+    redirectTo: 'pesquisa/otype',
+    pathMatch: 'full'
+  },
+
+  {
+    path: 'pesquisa/otype',
     component: InspectionSearchComponent,
     canActivate: [AuthGuard],
     data: { roles: ['ROLE_ADMIN', 'ROLE_CORRETOR'], mode: 'otype' }
