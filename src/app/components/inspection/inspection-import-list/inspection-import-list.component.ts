@@ -45,7 +45,7 @@ import { AuthService } from '../../../auth/services/auth.service';
   styleUrl: './inspection-import-list.component.scss'
 })
 export class InspectionImportListComponent implements AfterViewInit {
-  viewMode: 'inspections' | 'inspectors' | 'photos-inspections' | 'inspection-upload' = 'inspections';
+  viewMode: 'inspections' | 'inspectors' | 'photos-inspections' | 'photos' | 'inspection-upload' = 'inspections';
   readonly canManageInspectors: boolean;
   inspectionColumns: string[] = ['id', 'status', 'worder', 'client', 'name', 'city', 'duedate', 'actions'];
   inspectorColumns: string[] = ['id', 'nome', 'actions'];
@@ -73,6 +73,10 @@ export class InspectionImportListComponent implements AfterViewInit {
   inspectorEditing?: Inspector;
   photoEditing?: PhotoInspection;
   selectedPhotoFileForUpdate?: File;
+  selectedPhotoPreview?: string;
+  newPhotoInspectionId?: number;
+  newPhotoDescription = '';
+  newPhotoFile?: File;
 
   inspectorForm: Inspector = { nome: '' };
 
@@ -94,6 +98,10 @@ export class InspectionImportListComponent implements AfterViewInit {
 
     if (routeView === 'photos-inspections') {
       this.viewMode = 'photos-inspections';
+    }
+
+    if (routeView === 'photos') {
+      this.viewMode = 'photos';
     }
 
     if (routeView === 'inspection-upload') {
@@ -374,6 +382,50 @@ export class InspectionImportListComponent implements AfterViewInit {
     this.selectedPhotoFileForUpdate = input.files?.[0];
   }
 
+  onNewPhotoFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    this.newPhotoFile = input.files?.[0];
+  }
+
+  createPhoto(): void {
+    if (!this.newPhotoInspectionId || !this.newPhotoFile) {
+      this.showMessage('Selecione a inspeção e uma imagem para cadastrar a foto.');
+      return;
+    }
+
+    this.inspectionService
+      .createPhotoInspection(this.newPhotoInspectionId, this.newPhotoFile, this.newPhotoDescription || '')
+      .subscribe({
+        next: () => {
+          this.showMessage('Foto cadastrada com sucesso.');
+          this.clearCreatePhotoForm();
+          this.loadPhotosInspections();
+        },
+        error: () => this.showMessage('Não foi possível cadastrar a foto.')
+      });
+  }
+
+  clearCreatePhotoForm(): void {
+    this.newPhotoInspectionId = undefined;
+    this.newPhotoDescription = '';
+    this.newPhotoFile = undefined;
+  }
+
+  openPhotoPreview(row: PhotoInspection): void {
+    const preview = this.getPhotoPreview(row);
+
+    if (!preview) {
+      this.showMessage('Foto sem visualização disponível.');
+      return;
+    }
+
+    this.selectedPhotoPreview = preview;
+  }
+
+  closePhotoPreview(): void {
+    this.selectedPhotoPreview = undefined;
+  }
+
   startEditPhoto(row: PhotoInspection): void {
     this.photoEditing = { ...row };
     this.selectedPhotoFileForUpdate = undefined;
@@ -394,7 +446,7 @@ export class InspectionImportListComponent implements AfterViewInit {
       .updatePhotoInspection(this.photoEditing.id, this.selectedPhotoFileForUpdate, this.photoEditing.descricao || '')
       .subscribe({
         next: () => {
-          this.showMessage('Foto atualizada com sucesso.');
+          this.showMessage('Foto substituída com sucesso.');
           this.cancelEditPhoto();
           this.loadPhotosInspections();
         },

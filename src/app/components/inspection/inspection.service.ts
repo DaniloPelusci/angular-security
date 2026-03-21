@@ -93,6 +93,18 @@ export class InspectionService {
     return this.http.post<PhotoInspection[]>(`${this.photosInspectionsApiUrl}/by-inspections`, inspections);
   }
 
+  createPhotoInspection(inspectionId: number, photoFile: File, descricao?: string): Observable<PhotoInspection> {
+    const formData = new FormData();
+    formData.append('inspectionId', String(inspectionId));
+    formData.append('foto', photoFile);
+
+    if (descricao !== undefined && descricao !== null) {
+      formData.append('descricao', descricao);
+    }
+
+    return this.http.post<PhotoInspection>(this.photosInspectionsApiUrl, formData);
+  }
+
   updatePhotoInspection(id: number, photoFile: File, descricao?: string): Observable<PhotoInspection> {
     const formData = new FormData();
     formData.append('foto', photoFile);

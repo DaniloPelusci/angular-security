@@ -53,6 +53,7 @@ export class InspectionSearchComponent implements OnInit, AfterViewInit {
   selectedInspection?: Inspection;
   selectedPhotoPreview?: string;
   photoEditing?: PhotoInspection;
+  selectedPhotoFileForUpdate?: File;
   isSavingPhoto = false;
   readonly pageSizeOptions = [5, 10, 15, 20];
 
@@ -180,20 +181,28 @@ export class InspectionSearchComponent implements OnInit, AfterViewInit {
 
   startEditPhoto(photo: PhotoInspection): void {
     this.photoEditing = { ...photo };
+    this.selectedPhotoFileForUpdate = undefined;
   }
 
   cancelEditPhoto(): void {
     this.photoEditing = undefined;
+    this.selectedPhotoFileForUpdate = undefined;
   }
 
-  savePhotoMetadata(): void {
-    if (!this.photoEditing) {
+  onPhotoFileForUpdateSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    this.selectedPhotoFileForUpdate = input.files?.[0];
+  }
+
+  savePhotoReplacement(): void {
+    if (!this.photoEditing?.id || !this.selectedPhotoFileForUpdate) {
+      this.showMessage('Selecione uma nova imagem para substituir a foto atual.');
       return;
     }
 
     this.isSavingPhoto = true;
     this.inspectionService
-      .updatePhotoInspectionMetadata(this.photoEditing)
+      .updatePhotoInspection(this.photoEditing.id, this.selectedPhotoFileForUpdate, this.photoEditing.descricao || '')
       .pipe(finalize(() => (this.isSavingPhoto = false)))
       .subscribe({
         next: (updatedPhoto) => {
@@ -201,9 +210,10 @@ export class InspectionSearchComponent implements OnInit, AfterViewInit {
             photo.id === updatedPhoto.id ? { ...photo, ...updatedPhoto } : photo
           );
           this.photoEditing = undefined;
-          this.showMessage('Dados da foto atualizados com sucesso.');
+          this.selectedPhotoFileForUpdate = undefined;
+          this.showMessage('Foto substituída com sucesso.');
         },
-        error: () => this.showMessage('Não foi possível atualizar os dados da foto.')
+        error: () => this.showMessage('Não foi possível substituir a foto.')
       });
   }
 
