@@ -2,6 +2,7 @@
   <h2 *ngIf="viewMode === 'inspections'">Gestão de inspeções</h2>
   <h2 *ngIf="viewMode === 'inspectors'">Cadastro de inspetor</h2>
   <h2 *ngIf="viewMode === 'photos-inspections'">Fotos de inspeções</h2>
+  <h2 *ngIf="viewMode === 'photos'">Fotos</h2>
   <h2 *ngIf="viewMode === 'inspection-upload'">Upload de inspeção</h2>
 
   <div *ngIf="viewMode === 'inspections'" class="page-content">
@@ -181,7 +182,33 @@
       </table>
     </div>
   </div>
-  <div *ngIf="viewMode === 'photos-inspections'" class="page-content">
+  <div *ngIf="viewMode === 'photos-inspections' || viewMode === 'photos'" class="page-content">
+    <div class="editor-box mat-elevation-z2">
+      <h3>Cadastrar foto</h3>
+      <div class="form-grid">
+        <mat-form-field appearance="outline">
+          <mat-label>Inspeção</mat-label>
+          <mat-select [(ngModel)]="newPhotoInspectionId">
+            <mat-option *ngFor="let inspection of dataSource.data" [value]="inspection.id">
+              #{{ inspection.id }} - {{ inspection.client || inspection.name || 'Sem cliente' }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Descrição</mat-label>
+          <input matInput [(ngModel)]="newPhotoDescription" />
+        </mat-form-field>
+      </div>
+
+      <input type="file" accept="image/*" (change)="onNewPhotoFileSelected($event)" />
+
+      <div class="actions-row">
+        <button mat-raised-button color="primary" (click)="createPhoto()">Cadastrar foto</button>
+        <button mat-stroked-button (click)="clearCreatePhotoForm()">Limpar</button>
+      </div>
+    </div>
+
     <div class="photo-filters-row">
       <mat-form-field appearance="outline" class="filter-field">
         <mat-label>Filtrar por inspetor</mat-label>
@@ -243,7 +270,8 @@
           <th mat-header-cell *matHeaderCellDef>Ações</th>
           <td mat-cell *matCellDef="let row">
             <div class="actions-cell">
-              <button mat-stroked-button color="primary" (click)="startEditPhoto(row)">Alterar foto</button>
+              <button mat-stroked-button (click)="openPhotoPreview(row)">Visualizar</button>
+              <button mat-stroked-button color="primary" (click)="startEditPhoto(row)">Editar</button>
               <button mat-stroked-button color="warn" (click)="deletePhoto(row)">Excluir</button>
             </div>
           </td>
@@ -255,7 +283,8 @@
     </div>
 
     <div class="editor-box mat-elevation-z2" *ngIf="photoEditing">
-      <h3>Alterar foto #{{ photoEditing.id }}</h3>
+      <h3>Editar foto #{{ photoEditing.id }}</h3>
+      <p>Selecione uma nova imagem para substituir o arquivo da foto neste mesmo registro.</p>
       <div class="form-grid one-column">
         <mat-form-field appearance="outline">
           <mat-label>Descrição</mat-label>
@@ -266,6 +295,15 @@
       <div class="actions-row">
         <button mat-raised-button color="primary" (click)="savePhotoChanges()">Salvar</button>
         <button mat-stroked-button (click)="cancelEditPhoto()">Cancelar</button>
+      </div>
+    </div>
+
+    <div class="photo-modal" *ngIf="selectedPhotoPreview" (click)="closePhotoPreview()">
+      <div class="photo-modal-content" (click)="$event.stopPropagation()">
+        <button mat-icon-button class="close-button" (click)="closePhotoPreview()" aria-label="Fechar popup">
+          <mat-icon>close</mat-icon>
+        </button>
+        <img [src]="selectedPhotoPreview" alt="Foto da inspeção" />
       </div>
     </div>
   </div>

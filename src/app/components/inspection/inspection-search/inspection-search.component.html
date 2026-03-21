@@ -86,23 +86,20 @@
   </div>
 
   <div class="photo-editor mat-elevation-z2" *ngIf="photoEditing">
-    <h3>Editar metadados da foto #{{ photoEditing.id }}</h3>
+    <h3>Editar foto #{{ photoEditing.id }}</h3>
+    <p class="helper-text">Selecione uma nova imagem para substituir o arquivo da foto neste mesmo registro.</p>
 
     <div class="photo-editor-fields">
       <mat-form-field appearance="outline">
         <mat-label>Descrição</mat-label>
         <input matInput [(ngModel)]="photoEditing.descricao" />
       </mat-form-field>
-
-      <mat-form-field appearance="outline">
-        <mat-label>URL da foto</mat-label>
-        <input matInput [(ngModel)]="photoEditing.photoUrl" />
-      </mat-form-field>
     </div>
+    <input type="file" accept="image/*" (change)="onPhotoFileForUpdateSelected($event)" />
 
     <div class="actions-row">
-      <button mat-raised-button color="primary" (click)="savePhotoMetadata()" [disabled]="isSavingPhoto">
-        Salvar
+      <button mat-raised-button color="primary" (click)="savePhotoReplacement()" [disabled]="isSavingPhoto">
+        Salvar substituição
       </button>
       <button mat-stroked-button (click)="cancelEditPhoto()" [disabled]="isSavingPhoto">
         Cancelar
