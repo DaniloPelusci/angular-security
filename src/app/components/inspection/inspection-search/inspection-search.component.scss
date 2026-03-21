@@ -32,6 +32,23 @@ table {
   min-width: 900px;
 }
 
+.helper-text {
+  margin: 8px 0 12px;
+  color: #666;
+}
+
+.mat-mdc-row {
+  cursor: pointer;
+}
+
+.mat-mdc-row:hover {
+  background: #f5f8ff;
+}
+
+.row-selected {
+  background: #e8f0fe;
+}
+
 .photo-modal {
   position: fixed;
   inset: 0;

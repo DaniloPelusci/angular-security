@@ -42,13 +42,13 @@ export class NavComponent {
 
   pesquisaSubmenuItems = [
     {
-      label: 'Pesquisa inspetor/worder',
+      label: 'Pesquisa por Worder',
       route: '/pesquisa/inspetor-worder',
       roles: ['ROLE_ADMIN', 'ROLE_CORRETOR']
     },
     {
-      label: 'Pesquisa/atype',
-      route: '/pesquisa/atype',
+      label: 'Pesquisa por Otype',
+      route: '/pesquisa/otype',
       roles: ['ROLE_ADMIN', 'ROLE_CORRETOR']
     }
   ];
