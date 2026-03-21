@@ -46,10 +46,41 @@ export class InspectionSearchComponent implements OnInit {
   photosDataSource = new MatTableDataSource<PhotoInspection>([]);
 
   selectedInspectionId?: number;
+  selectedInspection?: Inspection;
   selectedPhotoPreview?: string;
 
-  readonly inspectionColumns = ['id', 'status', 'worder', 'otype', 'client', 'name', 'city'];
+  readonly inspectionColumns = ['id', 'status', 'worder', 'otype', 'client', 'name', 'city', 'actions'];
   readonly photoColumns = ['id', 'inspectionId', 'descricao', 'preview'];
+  readonly inspectionDetailsFields: Array<{ key: keyof Inspection; label: string }> = [
+    { key: 'id', label: 'ID' },
+    { key: 'status', label: 'Status' },
+    { key: 'worder', label: 'Worder' },
+    { key: 'otype', label: 'Otype' },
+    { key: 'inspetorId', label: 'ID do Inspetor' },
+    { key: 'inspector', label: 'Inspetor' },
+    { key: 'client', label: 'Cliente' },
+    { key: 'name', label: 'Nome' },
+    { key: 'address1', label: 'Endereço 1' },
+    { key: 'address2', label: 'Endereço 2' },
+    { key: 'city', label: 'Cidade' },
+    { key: 'zip', label: 'CEP' },
+    { key: 'duedate', label: 'Vencimento' },
+    { key: 'rush', label: 'Rush' },
+    { key: 'followup', label: 'Follow Up' },
+    { key: 'vacant', label: 'Vacant' },
+    { key: 'mortgage', label: 'Mortgage' },
+    { key: 'vandalism', label: 'Vandalism' },
+    { key: 'freezeFlag', label: 'Freeze Flag' },
+    { key: 'storm', label: 'Storm' },
+    { key: 'roof', label: 'Roof' },
+    { key: 'water', label: 'Water' },
+    { key: 'naturalFlag', label: 'Natural Flag' },
+    { key: 'fire', label: 'Fire' },
+    { key: 'hazard', label: 'Hazard' },
+    { key: 'structure', label: 'Structure' },
+    { key: 'mold', label: 'Mold' },
+    { key: 'pump', label: 'Pump' }
+  ];
 
   constructor(
     private inspectionService: InspectionService,
@@ -104,6 +135,7 @@ export class InspectionSearchComponent implements OnInit {
     }
 
     this.selectedInspectionId = inspection.id;
+    this.selectedInspection = inspection;
     this.photosDataSource.data = [];
     this.isLoadingPhotos = true;
 
@@ -146,9 +178,15 @@ export class InspectionSearchComponent implements OnInit {
     return Boolean(inspection.id && inspection.id === this.selectedInspectionId);
   }
 
+  getInspectionFieldValue(inspection: Inspection, key: keyof Inspection): string | number {
+    const value = inspection[key];
+    return value !== null && value !== undefined && value !== '' ? value : '-';
+  }
+
   private searchInspections(): void {
     this.isLoading = true;
     this.selectedInspectionId = undefined;
+    this.selectedInspection = undefined;
     this.photosDataSource.data = [];
 
     const request$ = this.searchMode === 'worder'
