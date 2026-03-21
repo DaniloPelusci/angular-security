@@ -5,6 +5,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
@@ -27,6 +28,7 @@ import { InspectionService } from '../inspection.service';
     MatFormFieldModule,
     MatIconModule,
     MatInputModule,
+    MatAutocompleteModule,
     MatSelectModule,
     MatSnackBarModule,
     MatPaginatorModule,
@@ -43,9 +45,11 @@ export class InspectionSearchComponent implements OnInit, AfterViewInit {
   inspectorId?: number;
   searchValue = '';
   isLoading = false;
+  isLoadingOtypes = false;
   isLoadingPhotos = false;
 
   inspectors: Inspector[] = [];
+  otypes: string[] = [];
   inspectionsDataSource = new MatTableDataSource<Inspection>([]);
   photosDataSource = new MatTableDataSource<PhotoInspection>([]);
 
@@ -100,6 +104,7 @@ export class InspectionSearchComponent implements OnInit, AfterViewInit {
     const mode = this.route.snapshot.data['mode'];
     if (mode === 'otype') {
       this.searchMode = 'otype';
+      this.loadOtypes();
     }
 
     this.loadInspectors();
@@ -118,7 +123,16 @@ export class InspectionSearchComponent implements OnInit, AfterViewInit {
   }
 
   get searchPlaceholder(): string {
-    return this.searchMode === 'worder' ? 'Digite o worder' : 'Digite o otype';
+    return this.searchMode === 'worder' ? 'Digite o worder' : 'Selecione ou digite um otype';
+  }
+
+  get filteredOtypes(): string[] {
+    const search = this.searchValue.trim().toLocaleLowerCase();
+    if (!search) {
+      return this.otypes;
+    }
+
+    return this.otypes.filter((otype) => otype.toLocaleLowerCase().includes(search));
   }
 
   loadInspectors(): void {
@@ -128,6 +142,21 @@ export class InspectionSearchComponent implements OnInit, AfterViewInit {
       },
       error: () => this.showMessage('Não foi possível carregar os inspetores.')
     });
+  }
+
+  loadOtypes(): void {
+    this.isLoadingOtypes = true;
+    this.inspectionService
+      .listOtypes()
+      .pipe(finalize(() => (this.isLoadingOtypes = false)))
+      .subscribe({
+        next: (otypes) => {
+          this.otypes = otypes
+            .map((otype) => otype?.trim())
+            .filter((otype): otype is string => Boolean(otype));
+        },
+        error: () => this.showMessage('Não foi possível carregar os otypes.')
+      });
   }
 
   search(): void {

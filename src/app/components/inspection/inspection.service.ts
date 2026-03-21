@@ -51,6 +51,10 @@ export class InspectionService {
     return this.http.get<Inspection[]>(`${this.inspectionsApiUrl}/por-otype`, { params });
   }
 
+  listOtypes(): Observable<string[]> {
+    return this.http.get<string[]>(`${this.inspectionsApiUrl}/otypes`);
+  }
+
   uploadExcel(file: File): Observable<void> {
     const formData = new FormData();
     formData.append('file', file);
