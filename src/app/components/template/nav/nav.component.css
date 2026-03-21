@@ -12,9 +12,20 @@
     padding-right: 10px;
 }
 
+.submenu-arrow {
+    margin-left: auto;
+}
+
+.submenu-wrapper {
+    padding-left: 16px;
+}
+
+.submenu-item {
+    font-size: 13px;
+}
+
 .content {
     padding: 16px;
     background-color: #fff;
 }
-
 

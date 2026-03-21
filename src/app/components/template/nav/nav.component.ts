@@ -23,7 +23,7 @@ import { AuthService } from '../../../auth/services/auth.service';
   styleUrl: './nav.component.css'
 })
 export class NavComponent {
-
+  pesquisaExpanded = false;
 
   constructor(public authService: AuthService) {}
 
@@ -39,6 +39,19 @@ export class NavComponent {
     { label: 'Upload de inspeção', icon: 'folder_zip', route: '/inspection-upload', roles: ['ROLE_ADMIN', 'ROLE_CORRETOR'] },
     { label: 'Usuários', icon: 'people', route: '/users', roles: ['ROLE_ADMIN'] },
     { label: 'Cadastrar Usuário', icon: 'person_add', route: '/register', roles: ['ROLE_ADMIN'] }  ];
+
+  pesquisaSubmenuItems = [
+    {
+      label: 'Pesquisa inspetor/worder',
+      route: '/pesquisa/inspetor-worder',
+      roles: ['ROLE_ADMIN', 'ROLE_CORRETOR']
+    },
+    {
+      label: 'Pesquisa/atype',
+      route: '/pesquisa/atype',
+      roles: ['ROLE_ADMIN', 'ROLE_CORRETOR']
+    }
+  ];
 
   logout() {
     this.authService.logout();

@@ -10,6 +10,27 @@
           {{ item.label }}
         </a>
       </ng-container>
+
+      <ng-container *ngIf="canShow(['ROLE_ADMIN', 'ROLE_CORRETOR'])">
+        <a mat-list-item (click)="pesquisaExpanded = !pesquisaExpanded">
+          <mat-icon>search</mat-icon>
+          Pesquisa
+          <mat-icon class="submenu-arrow">{{ pesquisaExpanded ? 'expand_less' : 'expand_more' }}</mat-icon>
+        </a>
+
+        <div class="submenu-wrapper" *ngIf="pesquisaExpanded">
+          <a
+            *ngFor="let item of pesquisaSubmenuItems"
+            [hidden]="!canShow(item.roles)"
+            mat-list-item
+            class="submenu-item"
+            [routerLink]="item.route"
+          >
+            {{ item.label }}
+          </a>
+        </div>
+      </ng-container>
+
       <!-- Botão de sair -->
       <a *ngIf="authService.isAuthenticated()" (click)="logout()" mat-list-item>
         <mat-icon>logout</mat-icon>
