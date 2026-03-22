@@ -8,7 +8,8 @@ import { environment } from '../../../environments/environment';
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private readonly apiBaseUrl = environment.apiBaseUrl;
-  private readonly authApiUrl = `${this.apiBaseUrl}/auth`;
+  private readonly authBaseUrl = this.apiBaseUrl.replace(/\/api\/?$/, '');
+  private readonly authApiUrl = `${this.authBaseUrl}/auth`;
   private readonly usersApiUrl = `${this.apiBaseUrl}/api/users`;
   private readonly permissionsApiUrl = `${this.apiBaseUrl}/api/permissions`;
 
