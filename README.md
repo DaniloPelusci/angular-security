@@ -25,10 +25,12 @@ Sistema CRM desenvolvido para otimizar processos de captação, gestão e acompa
 Para rodar frontend e backend juntos em ambiente local sem erro de CORS:
 
 1. Suba o backend Spring Security em `http://localhost:8080`.
-2. Suba o frontend Angular com `npm start` (ou `ng serve`).
-3. O Angular usa `proxy.conf.json` para redirecionar automaticamente chamadas `/auth` e `/api` para o backend Java.
+2. Garanta que o arquivo `src/environments/environment.development.ts` esteja com `apiBaseUrl: 'http://localhost:8080'`.
+3. Suba o frontend Angular com `npm start` (ou `ng serve`).
 
-Isso permite manter chamadas HTTP relativas no frontend (ex.: `/auth/login`, `/api/users`) e simplifica a integração entre os dois projetos.
+Para deploy em produção (AWS), configure o endpoint do backend em `src/environments/environment.ts` no campo `apiBaseUrl`.
+
+Isso permite manter uma configuração separada por ambiente (dev/prod), exatamente como no padrão usado com backend Spring.
 
 ---
 ## 🏗️ Tecnologias Utilizadas
