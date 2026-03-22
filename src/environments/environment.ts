@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiBaseUrl: 'https://SEU-BACKEND-AWS.amazonaws.com'
+  apiBaseUrl: 'http://13.59.151.66'
 };
